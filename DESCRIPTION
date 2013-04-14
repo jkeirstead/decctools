@@ -1,0 +1,24 @@
+Package: decctools
+Type: Package
+Author: James Keirstead <james.keirstead@gmail.com>
+Maintainer: James Keirstead <james.keirstead@gmail.com>
+Version: 0.1
+License: GPL-2
+Title: Get energy data from the UK Dept of Energy and Climate Change
+Description: decctools provides functions for retrieving energy
+    statistics from the United Kingdom Department of Energy and Climate
+    Change.  The current version focuses on total final energy consumption
+    statistics at the local authority, MSOA, and LSOA geographies.
+Date: 2013-04-14
+Depends:
+    stringr,
+    XLConnect,
+    reshape2,
+    plyr
+LazyData: true
+Collate:
+    'decctools.r'
+    'utils.r'
+    'msoa.r'
+    'lsoa.r'
+    'lad.r'
