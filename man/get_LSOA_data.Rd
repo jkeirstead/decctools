@@ -2,8 +2,7 @@
 \alias{get_LSOA_data}
 \title{Get LSOA energy consumption data}
 \usage{
-  get_LSOA_data(id = NA, fuel = c("electricity", "gas"),
-    dir = NA)
+  get_LSOA_data(id, fuel = c("electricity", "gas"), dir)
 }
 \arguments{
   \item{id}{a vector of LSOA ids to fetch.  If not

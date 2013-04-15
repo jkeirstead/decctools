@@ -10,7 +10,7 @@
 #' @export
 #' @examples
 #' get_LSOA_data() # Gets all data
-get_LSOA_data <- function(id=NA, fuel=c("electricity", "gas"), dir=NA) {
+get_LSOA_data <- function(id, fuel=c("electricity", "gas"), dir) {
 
   ## As with the MSOA stuff, we'll prepare a list of all the parameters and then process them one by one.
   sector <- "domestic" # because at the moment, DECC doesn't provide other sectors
@@ -30,7 +30,11 @@ get_LSOA_data <- function(id=NA, fuel=c("electricity", "gas"), dir=NA) {
   all_data <- subset(all_data, LSOA_code!="Unallocated")
 
   ## Subset on the target ids
-  if (!is.na(id)) all_data <- all_data[which(all_data$LSOA_code %in% id),]
+  if (!missing(id)) {
+    if (!is.na(id))  {
+      all_data <- all_data[which(all_data$LSOA_code %in% id),]
+    }
+  }
 
   ## Renumber rows and return the result
   row.names(all_data) <- 1:nrow(all_data)
@@ -104,3 +108,37 @@ get_master_LSOA_params_list <- function(dir) {
   return(df.l)
 
 }
+
+#' Gets the 2011 population estimates for all LSOAs
+#'
+#' This function gets the socio-demographic data associated with each LSOA.  The original data can be found at \url{https://www.gov.uk/government/statistical-data-sets/socio-economic-data-for-mlsoa-igz-and-llsoa-electricity-and-gas-estimates}.  As a reminder, this data only covers England and Wales.
+#'
+#' @param dir an (optional) directory in which to save the downloaded data
+#' @export
+#' @return a data frame with the LSOA_code, population, area (in hectares), and number of households
+get_LSOA_population <- function(dir) {
+
+  ## Download the file
+  url <- "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/175644/Socio-economic_data_2013.xls"
+  file_name <- get_remote_file(url, dir)
+
+  ## Now open up the file and read the data
+  ## Note that it is in two parts: English MLSOAs and Scottish IGZs
+  wb <- loadWorkbook(file_name)
+  pop_data <- readWorksheet(wb, "LLSOA England and Wales", startRow=2, startCol=3)
+  rm(wb)
+
+  ## Tidy up both files
+  tidy_pop_data <- function(l) {
+    names(l) <- c("LSOA_code", "name", "population", "area", "households")
+    empty_rows <- which(is.na(l$population))
+    if (length(empty_rows)>0) l <- l[-empty_rows,]
+    return(l[,-2])
+  }
+
+  pop_data <- tidy_pop_data(pop_data)
+  
+  ## Return the result
+  return(pop_data)
+}
+  

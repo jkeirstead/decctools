@@ -1,4 +1,7 @@
 export(get_LAD_data)
+export(get_LAD_population)
 export(get_LSOA_data)
+export(get_LSOA_population)
 export(get_MSOA_data)
-export(get_lookup)
+export(get_MSOA_population)
+export(get_lookup_table)

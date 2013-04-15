@@ -2,8 +2,8 @@
 \alias{get_LAD_data}
 \title{Get LAD energy consumption data}
 \usage{
-  get_LAD_data(id = NA, year = NA, sector = "total",
-    fuel = "total", dir = NA)
+  get_LAD_data(id, year, sector = "total", fuel = "total",
+    dir)
 }
 \arguments{
   \item{id}{the unique id of the LAD to fetch.  If not

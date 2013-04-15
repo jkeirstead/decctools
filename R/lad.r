@@ -17,7 +17,7 @@
 #' get_LAD_data()
 #' # Gets energy data for electricity and gas use in the domestic sector in the most recent year
 #' get_LAD_data(sector="domestic", fuel=c("electricity", "gas")) 
-get_LAD_data <- function(id=NA, year=NA, sector='total', fuel='total', dir=NA) {
+get_LAD_data <- function(id, year, sector='total', fuel='total', dir) {
 
   ## Download the data if necessary
   url <- "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/172997/Sub-national_total_final_energy_consumption_statistics__2005_-_2010.xlsx"
@@ -32,7 +32,9 @@ get_LAD_data <- function(id=NA, year=NA, sector='total', fuel='total', dir=NA) {
   year_error <- FALSE
 
   ## Trap various error conditions
-  if (is.na(year)) {
+  if (missing(year)) {
+    year_error <- TRUE
+  } else if (is.na(year)) {
     year_error <- TRUE
   } else if (length(year)!=1) {
     warning("Only one year currently supported.  Defaulting to most recent year.")
@@ -56,7 +58,12 @@ get_LAD_data <- function(id=NA, year=NA, sector='total', fuel='total', dir=NA) {
   df <- clean_decc_data(df, sector, fuel)
 
   ## Subset on target ids
-  if (!is.na(id)) df <- df[which(df$LAU1_code %in% id),]
+  if (!missing(id)) {
+    if (!is.na(id)) {
+      df <- df[which(df$LAU1_code %in% id),]
+    }
+  }
+  
   
   ## Renumber rows and return the result
   row.names(df) <- 1:nrow(df)
@@ -130,3 +137,17 @@ clean_decc_data <- function(df, sector, fuel) {
   ## Return the result
   return(df.m)
 }
+
+#' Gets the 2010 population estimates for all local authority districts
+#'
+#' This is a convenience function that returns the population data from \code{\link{LAD_metadata}}.
+#'
+#' @export
+#' @return a data frame with the LAU1_code and population
+get_LAD_population <- function() {
+
+  ## This is now stored in the embedded file so it's a quick job.
+  return(LAD_metadata[,c("LAU1_code", "population")])
+
+}
+  

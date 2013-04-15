@@ -2,9 +2,8 @@
 \alias{get_MSOA_data}
 \title{Get MSOA energy consumption data}
 \usage{
-  get_MSOA_data(id = NA,
-    sector = c("domestic", "nondomestic"),
-    fuel = c("electricity", "gas"), dir = NA)
+  get_MSOA_data(id, sector = c("domestic", "nondomestic"),
+    fuel = c("electricity", "gas"), dir)
 }
 \arguments{
   \item{id}{the unique id of the MSOA to fetch.  If not

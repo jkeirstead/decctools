@@ -13,7 +13,7 @@
 #' @export
 #' @examples
 #' get_MSOA_data() # Gets all data
-get_MSOA_data <- function(id=NA, sector=c("domestic", "nondomestic"), fuel=c("electricity", "gas"), dir=NA) {
+get_MSOA_data <- function(id, sector=c("domestic", "nondomestic"), fuel=c("electricity", "gas"), dir) {
 
   ## The easiest way to do this might be to just download all of the data, prepare the
   ## appropriate data frame and then return the subset.
@@ -34,7 +34,11 @@ get_MSOA_data <- function(id=NA, sector=c("domestic", "nondomestic"), fuel=c("el
   all_data <- subset(all_data, MSOA_code!="Unallocated")
 
   ## Subset on the target ids
-  if (!is.na(id)) all_data <- all_data[which(all_data$MSOA_code %in% id),]
+  if (!missing(id)) {
+    if (!is.na(id)) {
+      all_data <- all_data[which(all_data$MSOA_code %in% id),]
+    }
+  }
     
   ## Renumber rows and return the result
   row.names(all_data) <- 1:nrow(all_data)
@@ -107,3 +111,38 @@ get_master_MSOA_params_list <- function(dir) {
   df.l[[1]]['custom_function'] <- list(custom_function=dom_elec_function)
   return(df.l)
 }
+
+#' Gets the 2011 population estimates for all MSOAs (including Scottish IGZs)
+#'
+#' This function gets the socio-demographic data associated with each MSOA.  The original data can be found at \url{https://www.gov.uk/government/statistical-data-sets/socio-economic-data-for-mlsoa-igz-and-llsoa-electricity-and-gas-estimates}
+#'
+#' @param dir an (optional) directory in which to save the downloaded data
+#' @export
+#' @return a data frame with the MSOA_code, population, area (in hectares), and number of households
+get_MSOA_population <- function(dir) {
+
+  ## Download the file
+  url <- "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/175644/Socio-economic_data_2013.xls"
+  file_name <- get_remote_file(url, dir)
+
+  ## Now open up the file and read the data
+  ## Note that it is in two parts: English MLSOAs and Scottish IGZs
+  wb <- loadWorkbook(file_name)
+  england_data <- readWorksheet(wb, "MLSOA England and Wales", startRow=2, startCol=1)
+  scotland_data <- readWorksheet(wb, "IGZ Scotland", startRow=2, startCol=1)
+  pop_data <- list(england_data, scotland_data)
+  rm(wb)
+
+  ## Tidy up both files
+  pop_data <- lapply(pop_data, function(l) {
+    names(l) <- c("MSOA_code", "name", "population", "area", "households")
+    empty_rows <- which(is.na(l$population))
+    if (length(empty_rows)>0) l <- l[-empty_rows,]
+    return(l[,-2])
+  })
+  pop_data <- do.call("rbind", pop_data)
+  
+  ## Return the result
+  return(pop_data)
+}
+  
