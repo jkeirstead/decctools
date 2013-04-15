@@ -9,7 +9,7 @@
   (Eurostat LAU) and
   \url{http://www.ons.gov.uk/ons/guide-method/geography/products/names--codes-and-look-ups/names-and-codes-listings/names-and-codes-for-administrative-geography/index.html}
   for UK LADs.  Population data from
-  \url{http://www.ons.gov.uk/ons/publications/re-reference-tables.html?edition=tcm%3A77-231847}.
+  \url{http://www.ons.gov.uk/ons/publications/re-reference-tables.html?edition=tcm\%3A77-231847}.
 }
 \description{
   A data frame providing extra information about local
@@ -90,14 +90,13 @@
   data come from
   \url{http://www.eci.ox.ac.uk/research/energy/degreedays.php}.
   Heating degree days are assumed to be measured against a
-  15.5$^\circ$C base temperature and cooling degree days
-  against 13$^\circ$C.  The Oxford data set provides point
+  15.5 degrees C base temperature and cooling degree days
+  against 13 degrees C.  The Oxford data set provides point
   estimates for 77 locations around the UK; an inverse
-  distance weighting interpolation performed (with $p =
-  0.2$) to give a smooth surface of degree days across the
-  UK and this was sampled using the LAD polygons to
-  estimate the heating and cooling degree days in each
-  location.
+  distance weighting interpolation performed (with p = 0.2)
+  to give a smooth surface of degree days across the UK and
+  this was sampled using the LAD polygons to estimate the
+  heating and cooling degree days in each location.
 }
 \note{
   Please be aware that the LAD codes change from time to
