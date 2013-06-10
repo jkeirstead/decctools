@@ -11,6 +11,7 @@
 }
 \seealso{
   \code{\link{get_LAD_data}}, \code{\link{get_MSOA_data}},
-  \code{\link{get_LSOA_data}}, \code{\link{get_lookup}}
+  \code{\link{get_LSOA_data}},
+  \code{\link{get_lookup_table}}
 }
 

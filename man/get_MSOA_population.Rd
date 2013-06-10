@@ -1,6 +1,9 @@
 \name{get_MSOA_population}
 \alias{get_MSOA_population}
 \title{Gets the 2011 population estimates for all MSOAs (including Scottish IGZs)}
+\source{
+  \url{https://www.gov.uk/government/statistical-data-sets/socio-economic-data-for-mlsoa-igz-and-llsoa-electricity-and-gas-estimates}
+}
 \usage{
   get_MSOA_population(dir)
 }
@@ -14,7 +17,6 @@
 }
 \description{
   This function gets the socio-demographic data associated
-  with each MSOA.  The original data can be found at
-  \url{https://www.gov.uk/government/statistical-data-sets/socio-economic-data-for-mlsoa-igz-and-llsoa-electricity-and-gas-estimates}
+  with each Middle Super Output Area (MSOA).
 }
 

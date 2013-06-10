@@ -9,7 +9,9 @@
 #' @keywords data energy
 #' @export
 #' @examples
+#' \dontrun{
 #' get_LSOA_data() # Gets all data
+#' }
 get_LSOA_data <- function(id, fuel=c("electricity", "gas"), dir) {
 
   ## As with the MSOA stuff, we'll prepare a list of all the parameters and then process them one by one.
@@ -97,6 +99,8 @@ get_master_LSOA_params_list <- function(dir) {
   dom_gas_function <- function(df) return(df[,5])
   dom_elec_function <- function(df) return(apply(df[,5:6],1,sum,na.rm=TRUE))
 
+  dir <- validate_directory(dir)
+  
   ## Build a list summarizing everything
   df.l <- data.frame(url=urls, sheet_name=worksheet_names, sector=sectors, fuel=fuels,
                      dir=dir, stringsAsFactors=FALSE)

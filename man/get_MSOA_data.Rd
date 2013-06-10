@@ -30,7 +30,9 @@
   that allows you to cache a local copy.
 }
 \examples{
+\dontrun{
 get_MSOA_data() # Gets all data
+}
 }
 \keyword{data}
 \keyword{energy}

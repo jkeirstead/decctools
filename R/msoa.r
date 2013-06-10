@@ -12,7 +12,9 @@
 #' @keywords data energy
 #' @export
 #' @examples
+#' \dontrun{
 #' get_MSOA_data() # Gets all data
+#' }
 get_MSOA_data <- function(id, sector=c("domestic", "nondomestic"), fuel=c("electricity", "gas"), dir) {
 
   ## The easiest way to do this might be to just download all of the data, prepare the
@@ -101,6 +103,8 @@ get_master_MSOA_params_list <- function(dir) {
   null_function <- function(df) return(df[,4])
   dom_elec_function <- function(df) return(apply(df[,4:5],1,sum,na.rm=TRUE))
 
+  dir <- validate_directory(dir)
+  
   ## Build a list summarizing everything
   df.l <- data.frame(url=urls, sheet_name=worksheet_names, sector=sectors, fuel=fuels, dir=dir,
                      stringsAsFactors=FALSE)

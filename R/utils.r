@@ -16,13 +16,8 @@ get_remote_file <- function(url, dir, update_cache=FALSE) {
   } else if (is.na(url)) {
     stop("A valid URL must be specified.")
   }
-  
-  ## Define the cache directory
-  if (missing(dir)) dir=file.path(tempdir(), get_package_name())
-  if (is.na(dir)) dir=file.path(tempdir(), get_package_name())
 
-  ## Make sure it exists before trying to download
-  if (!file.exists(dir)) dir.create(dir)
+  dir <- validate_directory(dir)
   
   ## Split the URL to identify the filename
   tmp <- unlist(str_split(url, "/"))
@@ -32,6 +27,22 @@ get_remote_file <- function(url, dir, update_cache=FALSE) {
   if (!file.exists(file_name) | update_cache) download.file(url, file_name, mode="wb", method="curl")
   
   return(file_name)
+}
+
+#' Validates a user-specified directory
+#'
+#' Ensures that a user-specified directory exists.  If the argument is missing
+#' then a placeholder directory is created in $TEMP.
+#' @param dir the directory name
+validate_directory <- function(dir) {
+  ## Define the cache directory
+  if (missing(dir)) dir=file.path(tempdir(), get_package_name())
+  if (is.na(dir)) dir=file.path(tempdir(), get_package_name())
+
+  ## Make sure it exists before trying to download
+  if (!file.exists(dir)) dir.create(dir)
+
+  return(dir)
 }
 
 #' Gets the name of this package

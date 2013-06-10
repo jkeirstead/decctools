@@ -27,4 +27,11 @@
   yyyy-mm-dd and must be between 2009-01-01 and the current
   day; the start must come before the end date.
 }
+\examples{
+\dontrun{
+start <- "2010-01-01"
+end <- "2010-12-31"
+2010_data <- get_grid_mix(start, end) # Gets all data for 2010
+}
+}
 

@@ -23,7 +23,9 @@
   from the DECC website.
 }
 \examples{
+\dontrun{
 get_LSOA_data() # Gets all data
+}
 }
 \keyword{data}
 \keyword{energy}
