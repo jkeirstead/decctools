@@ -7,12 +7,16 @@ License: GPL-2
 Title: Get energy data from the UK Dept of Energy and Climate Change
 Description: decctools provides functions for retrieving energy
     statistics from the United Kingdom Department of Energy and Climate
-    Change.  The current version focuses on total final energy consumption
-    statistics at the local authority, MSOA, and LSOA geographies.
+    Change and related data sources.  The current version focuses on
+    total final energy consumption statistics at the local authority, MSOA,
+    and LSOA geographies.  Methods for calculating the generation mix of
+    grid electricity and its associated carbon intensity are also provided.
 Date: 2013-04-14
 Depends:
     stringr,
     XLConnect,
+    XML,
+    lubridate,
     reshape2,
     plyr
 LazyData: true
@@ -22,3 +26,4 @@ Collate:
     'msoa.r'
     'lsoa.r'
     'lad.r'
+    'carbon-intensity.r'

@@ -1,6 +1,6 @@
 #' decctools
 #'
-#' Provides easy access to United Kingdom energy statistics for R.  The raw data can be found on the Department of Energy and Climate Change website, \url{http://www.decc.gov.uk}
+#' Provides easy access to United Kingdom energy statistics for R.  Most of the underlying data comes from the Department of Energy and Climate Change website, \url{http://www.decc.gov.uk}.
 #'
 #' @seealso \code{\link{get_LAD_data}}, \code{\link{get_MSOA_data}}, \code{\link{get_LSOA_data}}, \code{\link{get_lookup}}
 #' @name decctools
@@ -46,14 +46,29 @@ NULL
 #'
 #' \code{group_name} The Office for National Statistics calculated an area classification for each local authority; based on 2001 census data; see \url{http://www.ons.gov.uk/ons/guide-method/geography/products/area-classifications/ns-area-classifications/index/index.html}.  This field presents the group name, which is simply a descriptive label of the character of each LAD.
 #'
-#' \code{hdd}, \code{cdd}: These fields represent annual heating and cooling degree days for each LAD; the raw data come from \url{http://www.eci.ox.ac.uk/research/energy/degreedays.php}.  Heating degree days are assumed to be measured against a 15.5 degrees C base temperature and cooling degree days against 13 degrees C.  The Oxford data set provides point estimates for 77 locations around the UK; an inverse distance weighting interpolation performed (with p = 0.2) to give a smooth surface of degree days across the UK and this was sampled using the LAD polygons to estimate the heating and cooling degree days in each location.
+#' \code{hdd}, \code{cdd}: These fields represent annual heating and cooling degree days for each LAD; the raw data come from \url{http://www.eci.ox.ac.uk/research/energy/degreedays.php}.  Heating degree days are assumed to be measured against a 15.5 degrees C base temperature and cooling degree days against 13 degrees C.  The Oxford data set provides point estimates for 77 locations around the UK; an inverse distance weighting interpolation was performed (with p = 0.2) to give a smooth surface of degree days across the UK and this was sampled using the LAD polygons to estimate the heating and cooling degree days in each location.
 #'
-#' @source Various; see URLs in detail above.  Lookup codes from \url{http://www.ons.gov.uk/ons/guide-method/geography/products/names--codes-and-look-ups/names-and-codes-listings/names-and-codes-for-eurostat-geography/index.html} (Eurostat LAU) and \url{http://www.ons.gov.uk/ons/guide-method/geography/products/names--codes-and-look-ups/names-and-codes-listings/names-and-codes-for-administrative-geography/index.html} for UK LADs.  Population data from \url{http://www.ons.gov.uk/ons/publications/re-reference-tables.html?edition=tcm%3A77-231847}.
+#' @source Various; see URLs in detail above.  Lookup codes from \url{http://www.ons.gov.uk/ons/guide-method/geography/products/names--codes-and-look-ups/names-and-codes-listings/names-and-codes-for-eurostat-geography/index.html} (Eurostat LAU) and \url{http://www.ons.gov.uk/ons/guide-method/geography/products/names--codes-and-look-ups/names-and-codes-listings/names-and-codes-for-administrative-geography/index.html} for UK LADs.  Population data from \url{http://www.ons.gov.uk/ons/publications/re-reference-tables.html?edition=tcm\%3A77-231847}.
 #'
-#' @note Please be aware that the LAD codes change from time to time and so if you join this data with new data sets, you should manually check that the merge has been successful.  Subtle variations in name also exist so beware of merging on that field too.
+#' @note Please be aware that the LAD codes change from time to time and so if you join this data with new data sets, you should manually check that the merge has been successful.  Subtle variations in name also exist so beware if merging by \code{name}.
 #' 
 #' @docType data
 #' @keywords datasets
 #' @name LAD_metadata
 #' @format A data frame with 406 rows and 11 columns
 NULL
+
+#' Carbon intensity data
+#'
+#' A data frame giving the carbon intensity of different electricity generating sources including
+#' electricity flows from interconnections with other European countries. The values are measured in g CO2/kWh.
+#'
+#' @source Data come from \url{https://www.gov.uk/government/organisations/department-of-energy-climate-change/series/fuel-mix-disclosure-data-tables}, \url{http://www.earth.org.uk/note-on-UK-grid-CO2-intensity-variations.html}, and \url{https://www.gov.uk/government/publications/2012-greenhouse-gas-conversion-factors-for-company-reporting}.
+#' @docType data
+#' @keywords datasets
+#' @name carbon_intensities
+#' @format A data frame with 13 rows and 2 columns
+NULL  
+
+      
+
