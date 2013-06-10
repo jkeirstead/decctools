@@ -20,6 +20,7 @@ get_remote_file <- function(url, dir, update_cache=FALSE) {
   ## Define the cache directory
   if (missing(dir)) dir=file.path(tempdir(), get_package_name())
   if (is.na(dir)) dir=file.path(tempdir(), get_package_name())
+
   ## Make sure it exists before trying to download
   if (!file.exists(dir)) dir.create(dir)
   
@@ -46,13 +47,14 @@ get_package_name <- function() {
 #' MSOA, and LSOA geographies.  Also returns a flag indicating whether or
 #' not a given LAU is urban.  See \code{\link{LAD_metadata}} for more information.
 #'
-#' @param urban_classes classifications to be considered as urban.  Possible values include 'OU', 'LU', 'MU', 'SR', 'R80', 'R50'
+#' @param urban_classes classifications to be considered as urban.  Possible values include 'OU' (other urban), 'LU' (large urban), 'MU' (major urban), 'SR' (significant rural), 'R80' (80\% rural), 'R50' (50\% rural)
 #' @param dir (optional) directory to save the lookup table information
 #' @return a data frame
 #' @export
 get_lookup_table <- function(urban_classes=c("LU", "MU"), dir) {
-  
-  ## I'll take this from the domestic electricity page
+
+  ## The lookup data is available in the LSOA electricity demands data from DECC
+  ## so we'll use this rather than rooting around a master copy from ONS
   url <- "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/49432/4813-llsoa-domestic-elec-est-2010.xls"
 
   file_name <- get_remote_file(url, dir)
@@ -65,7 +67,7 @@ get_lookup_table <- function(urban_classes=c("LU", "MU"), dir) {
   ## Get rid of empty lines
   data <- subset(data, !is.na(LAU1_name))
 
-  ## I also need to add in the Scottish IGZ codes
+  ## Also need to add in the Scottish IGZ codes
   ## Download the file
   url <- "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/49424/4828-mlsoa-dom-elec-2010-alldata.xls"
   file_name <- get_remote_file(url, dir)
@@ -96,7 +98,6 @@ get_lookup_table <- function(urban_classes=c("LU", "MU"), dir) {
   data <- mutate(data, LAU1_name=str_replace(LAU1_name, "Kingston upon Hull, City of", "City of Kingston upon Hull"))
   data <- mutate(data, LAU1_name=str_replace(LAU1_name, "Rhondda, Cynon, Taff", "Rhondda Cynon Taf"))
   data <- mutate(data, LAU1_name=str_replace(LAU1_name, "Vale of Glamorgan, The", "The Vale of Glamorgan"))
-
 
   ## Now load in the urban classification.  All the detailed processing for this is in the benchmarking paper
   ## This is lazy loaded as part of the package

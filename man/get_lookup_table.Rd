@@ -6,8 +6,9 @@
 }
 \arguments{
   \item{urban_classes}{classifications to be considered as
-  urban.  Possible values include 'OU', 'LU', 'MU', 'SR',
-  'R80', 'R50'}
+  urban.  Possible values include 'OU' (other urban), 'LU'
+  (large urban), 'MU' (major urban), 'SR' (significant
+  rural), 'R80' (80\% rural), 'R50' (50\% rural)}
 
   \item{dir}{(optional) directory to save the lookup table
   information}

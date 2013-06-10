@@ -142,6 +142,7 @@ clean_decc_data <- function(df, sector, fuel) {
 #'
 #' This is a convenience function that returns the population data from \code{\link{LAD_metadata}}.
 #'
+#' @seealso \code{\link{LAD_metadata}} 
 #' @export
 #' @return a data frame with the LAU1_code and population
 get_LAD_population <- function() {

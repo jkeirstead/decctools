@@ -11,4 +11,7 @@
   This is a convenience function that returns the
   population data from \code{\link{LAD_metadata}}.
 }
+\seealso{
+  \code{\link{LAD_metadata}}
+}
 

@@ -93,17 +93,18 @@
   15.5 degrees C base temperature and cooling degree days
   against 13 degrees C.  The Oxford data set provides point
   estimates for 77 locations around the UK; an inverse
-  distance weighting interpolation performed (with p = 0.2)
-  to give a smooth surface of degree days across the UK and
-  this was sampled using the LAD polygons to estimate the
-  heating and cooling degree days in each location.
+  distance weighting interpolation was performed (with p =
+  0.2) to give a smooth surface of degree days across the
+  UK and this was sampled using the LAD polygons to
+  estimate the heating and cooling degree days in each
+  location.
 }
 \note{
   Please be aware that the LAD codes change from time to
   time and so if you join this data with new data sets, you
   should manually check that the merge has been successful.
-  Subtle variations in name also exist so beware of merging
-  on that field too.
+  Subtle variations in name also exist so beware if merging
+  by \code{name}.
 }
 \keyword{datasets}
 
