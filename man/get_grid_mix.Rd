@@ -4,10 +4,28 @@
 \source{
   The underlying data come from BM Reports,
   \url{http://www.bmreports.com/bsp/bsp_home.htm}, and are
-  used under license from Elexon. However the BM Reports
-  website is hard to use and so this function uses archived
-  data compiled by the Renewable Energy Foundation at
-  \url{http://www.ref.org.uk/fuel/}.
+  used under license from Elexon (see disclaimer below).
+  However the BM Reports website is hard to use and so this
+  function uses archived Elexon data compiled by the
+  charity Renewable Energy Foundation and available at no
+  cost at \url{http://www.ref.org.uk/fuel/}. ELEXON does
+  not and shall not be deemed to warrant or guarantee or
+  make any representation (whether expressly or impliedly)
+  as to the title, completeness, accuracy, reliability,
+  freeness from error, method of preparation,
+  merchantability or fitness for the purpose or for any
+  particular purpose (whether or not any such purpose has
+  been notified to ELEXON) of the Licensed Data and/or any
+  use of or dealing with it.  ELEXON shall have no
+  liability or responsibility whatsoever or howsoever
+  arising (whether directly or indirectly) as a result of
+  or in connection therewith, including in respect of each
+  and all loss of profits, loss of revenue, loss of
+  goodwill, loss of contracts, loss of business or
+  production, indirect loss, economic or consequential
+  loss, claims, demands, proceedings, actions, losses,
+  liabilities, damages, costs, charges and expenses
+  (whether or not any of the foregoing are foreseeable)
 }
 \usage{
   get_grid_mix(start, end)
