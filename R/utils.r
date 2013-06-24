@@ -76,7 +76,7 @@ get_lookup_table <- function(urban_classes=c("LU", "MU"), dir) {
   names(data) <- c("LAU1_name", "LAU1_code", "MSOA_code", "LSOA_code")
 
   ## Get rid of empty lines
-  data <- subset(data, !is.na(LAU1_name))
+  data <- data[!is.na(data$LAU1_name), ]
 
   ## Also need to add in the Scottish IGZ codes
   ## Download the file
@@ -90,7 +90,8 @@ get_lookup_table <- function(urban_classes=c("LU", "MU"), dir) {
   rm(wb)
   scotland_data <- scotland_data[,1:3]
   names(scotland_data) <- c("LAU1_name", "LAU1_code", "MSOA_code")
-  scotland_data <- subset(scotland_data, !is.na(LAU1_name) & str_sub(MSOA_code, end=1)=="S")
+  scotland_data <- scotland_data[!is.na(scotland_data$LAU1_name) &
+                                 str_sub(scotland_data$MSOA_code, end=1)=="S", ]
   scotland_data <- cbind(scotland_data, LSOA_code=NA)
 
   ## Combine the two data sets

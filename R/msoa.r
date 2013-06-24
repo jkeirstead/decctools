@@ -13,7 +13,7 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' get_MSOA_data() # Gets all data
+#' msoa_data <- get_MSOA_data() # Gets all data
 #' }
 get_MSOA_data <- function(id, sector=c("domestic", "nondomestic"), fuel=c("electricity", "gas"), dir) {
 
@@ -33,7 +33,7 @@ get_MSOA_data <- function(id, sector=c("domestic", "nondomestic"), fuel=c("elect
   all_data <- do.call("rbind", tmp)
 
   ## Remove the unallocated MSOAs
-  all_data <- subset(all_data, MSOA_code!="Unallocated")
+  all_data <- all_data[all_data$MSOA_code!="Unallocated", ]
 
   ## Subset on the target ids
   if (!missing(id)) {
@@ -73,7 +73,8 @@ parse_raw_MSOA_data <- function(l) {
   data <- mutate(data, energy=energy/1e6)
   
   ## Remove empty rows and return
-  data <- subset(data, !is.na(MSOA_code))    
+  data <- data[!is.na(data$MSOA_code), ]
+
   return(data)
 }
 

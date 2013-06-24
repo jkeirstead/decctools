@@ -17,6 +17,11 @@
   Calculates the carbon intensity of electricity generation
   in the UK between specified dates.
 }
+\examples{
+start <- "2010-01-01"
+end <- "2010-01-07"
+carbon <- get_grid_carbon(start, end) # Gets grid carbon for 1st week of January 2010
+}
 \seealso{
   \code{\link{get_grid_mix}} and
   \code{\link{carbon_intensities}} for data sources

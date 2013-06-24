@@ -31,7 +31,7 @@
 }
 \examples{
 \dontrun{
-get_MSOA_data() # Gets all data
+msoa_data <- get_MSOA_data() # Gets all data
 }
 }
 \keyword{data}

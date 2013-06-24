@@ -37,10 +37,10 @@
 \examples{
 \dontrun{
 # Gets energy data for total fuels and sectors for most recent year
-get_LAD_data()
-# Gets energy data for electricity and gas use in the domestic sector in the most recent year
-get_LAD_data(sector="domestic", fuel=c("electricity", "gas"))
+lad_data <- get_LAD_data()
 }
+# Gets energy data for electricity and gas use in the domestic sector in the most recent year
+df <- get_LAD_data(sector="domestic", fuel=c("electricity", "gas"))
 }
 \keyword{data}
 \keyword{energy}

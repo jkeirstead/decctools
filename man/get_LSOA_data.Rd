@@ -24,7 +24,7 @@
 }
 \examples{
 \dontrun{
-get_LSOA_data() # Gets all data
+lsoa_data <- get_LSOA_data() # Gets all data
 }
 }
 \keyword{data}

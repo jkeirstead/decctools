@@ -10,7 +10,7 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' get_LSOA_data() # Gets all data
+#' lsoa_data <- get_LSOA_data() # Gets all data
 #' }
 get_LSOA_data <- function(id, fuel=c("electricity", "gas"), dir) {
 
@@ -29,7 +29,7 @@ get_LSOA_data <- function(id, fuel=c("electricity", "gas"), dir) {
   all_data <- do.call("rbind", tmp)
 
   ## Remove the unallocated LSOAs
-  all_data <- subset(all_data, LSOA_code!="Unallocated")
+  all_data <- all_data[all_data$LSOA_code!="Unallocated", ]
 
   ## Subset on the target ids
   if (!missing(id)) {
@@ -70,7 +70,7 @@ parse_raw_LSOA_data <- function(l) {
   data <- mutate(data, energy=energy/1e6)
   
   ## Remove empty rows
-  data <- subset(data, !is.na(LSOA_code))
+  data <- data[!is.na(data$LSOA_code), ]
 
   return(data)
 }
