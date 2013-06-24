@@ -15,7 +15,7 @@ get_remote_file <- function(url, dir, update_cache=FALSE) {
     url <- url[1]
   } else if (is.na(url)) {
     stop("A valid URL must be specified.")
-  }
+  } 
 
   dir <- validate_directory(dir)
   
@@ -24,7 +24,21 @@ get_remote_file <- function(url, dir, update_cache=FALSE) {
   file_name <- file.path(dir, tmp[length(tmp)])
 
   ## If the file doesn't exist, then download it
-  if (!file.exists(file_name) | update_cache) download.file(url, file_name, mode="wb", method="curl")
+  if (!file.exists(file_name) | update_cache) {
+    method <- "curl"
+    if (system(method)==127) {
+      method <- "wget"
+      if (system(method)==127) {
+        stop("You must have either curl or wget installed.")
+      }
+    }
+    
+    if (!url.exists("http://www.google.com")) {
+      stop("You must be connected to the internet to download this file.")
+    } else {
+      download.file(url, file_name, mode="wb", method=method)
+    }
+  }
   
   return(file_name)
 }
@@ -100,20 +114,20 @@ get_lookup_table <- function(urban_classes=c("LU", "MU"), dir) {
   ## Some manual checking found a couple discrepancies in the names
   ## Tweak these to match
   ## unique(subset(tmp, is.na(LAU1_code) & !(country%in%c("Northern Ireland")))$LAU1_name)
-  data <- mutate(data, LAU1_name=str_replace(LAU1_name, "Argyll \\& Bute UA Island", "Argyll and Bute"))
-  data <- mutate(data, LAU1_name=str_replace(LAU1_name, "Edinburgh, City of", "City of Edinburgh"))
-  data <- mutate(data, LAU1_name=str_replace(LAU1_name, "Dumfries \\& Galloway", "Dumfries and Galloway"))
-  data <- mutate(data, LAU1_name=str_replace(LAU1_name, "Eilean Siar \\(Western Isles\\)", "Eilean Siar"))
-  data <- mutate(data, LAU1_name=str_replace(LAU1_name, "Perth \\& Kinross", "Perth and Kinross"))
-  data <- mutate(data, LAU1_name=str_replace(LAU1_name, "Cheshire West \\& Chester", "Cheshire West and Chester"))
-  data <- mutate(data, LAU1_name=str_replace(LAU1_name, "Bristol, City of", "City of Bristol"))
-  data <- mutate(data, LAU1_name=str_replace(LAU1_name, "Kingston upon Hull, City of", "City of Kingston upon Hull"))
-  data <- mutate(data, LAU1_name=str_replace(LAU1_name, "Rhondda, Cynon, Taff", "Rhondda Cynon Taf"))
-  data <- mutate(data, LAU1_name=str_replace(LAU1_name, "Vale of Glamorgan, The", "The Vale of Glamorgan"))
+  data <- mutate(data, LAU1_name=str_replace(data$LAU1_name, "Argyll \\& Bute UA Island", "Argyll and Bute"))
+  data <- mutate(data, LAU1_name=str_replace(data$LAU1_name, "Edinburgh, City of", "City of Edinburgh"))
+  data <- mutate(data, LAU1_name=str_replace(data$LAU1_name, "Dumfries \\& Galloway", "Dumfries and Galloway"))
+  data <- mutate(data, LAU1_name=str_replace(data$LAU1_name, "Eilean Siar \\(Western Isles\\)", "Eilean Siar"))
+  data <- mutate(data, LAU1_name=str_replace(data$LAU1_name, "Perth \\& Kinross", "Perth and Kinross"))
+  data <- mutate(data, LAU1_name=str_replace(data$LAU1_name, "Cheshire West \\& Chester", "Cheshire West and Chester"))
+  data <- mutate(data, LAU1_name=str_replace(data$LAU1_name, "Bristol, City of", "City of Bristol"))
+  data <- mutate(data, LAU1_name=str_replace(data$LAU1_name, "Kingston upon Hull, City of", "City of Kingston upon Hull"))
+  data <- mutate(data, LAU1_name=str_replace(data$LAU1_name, "Rhondda, Cynon, Taff", "Rhondda Cynon Taf"))
+  data <- mutate(data, LAU1_name=str_replace(data$LAU1_name, "Vale of Glamorgan, The", "The Vale of Glamorgan"))
 
   ## Now load in the urban classification.  All the detailed processing for this is in the benchmarking paper
   ## This is lazy loaded as part of the package
-  meta <- mutate(LAD_metadata, urban=(urban_class%in% urban_classes))
+  meta <- mutate(LAD_metadata, urban=(LAD_metadata$urban_class %in% urban_classes))
   meta <- meta[,c("name", "short_code", "long_code", "urban", "country")]
 
    ## Need to keep Scotland and Northern Ireland too

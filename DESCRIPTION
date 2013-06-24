@@ -18,6 +18,7 @@ Depends:
     XML,
     lubridate,
     reshape2,
+    RCurl,
     plyr
 LazyData: true
 Collate:

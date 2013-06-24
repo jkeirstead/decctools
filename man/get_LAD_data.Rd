@@ -40,7 +40,10 @@
 lad_data <- get_LAD_data()
 }
 # Gets energy data for electricity and gas use in the domestic sector in the most recent year
-df <- get_LAD_data(sector="domestic", fuel=c("electricity", "gas"))
+# This example requires a working internet connection
+if (url.exists("http://www.google.com")) {
+  df <- get_LAD_data(sector="domestic", fuel=c("electricity", "gas"))
+}
 }
 \keyword{data}
 \keyword{energy}

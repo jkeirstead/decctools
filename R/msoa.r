@@ -109,7 +109,7 @@ get_master_MSOA_params_list <- function(dir) {
   ## Build a list summarizing everything
   df.l <- data.frame(url=urls, sheet_name=worksheet_names, sector=sectors, fuel=fuels, dir=dir,
                      stringsAsFactors=FALSE)
-  df.l <- dlply(df.l, .(sheet_name), as.list)
+  df.l <- dlply(df.l, c("sheet_name"), as.list)
   
   ## Add the custom functions to to the list
   df.l <- lapply(df.l, function(l) c(l, list(custom_function=null_function)))

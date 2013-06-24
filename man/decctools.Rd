@@ -7,7 +7,8 @@
   Provides easy access to United Kingdom energy statistics
   for R.  Most of the underlying data comes from the
   Department of Energy and Climate Change website,
-  \url{http://www.decc.gov.uk}.
+  \url{http://www.decc.gov.uk}.  A working internet
+  connection is needed for almost all of the functions.
 }
 \seealso{
   \code{\link{get_LAD_data}}, \code{\link{get_MSOA_data}},

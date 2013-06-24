@@ -18,7 +18,10 @@
 #' lad_data <- get_LAD_data()
 #' }
 #' # Gets energy data for electricity and gas use in the domestic sector in the most recent year
-#' df <- get_LAD_data(sector="domestic", fuel=c("electricity", "gas"))
+#' # This example requires a working internet connection
+#' if (url.exists("http://www.google.com")) {
+#'   df <- get_LAD_data(sector="domestic", fuel=c("electricity", "gas"))
+#' }
 get_LAD_data <- function(id, year, sector='total', fuel='total', dir) {
 
   ## Download the data if necessary
@@ -135,7 +138,7 @@ clean_decc_data <- function(df, sector, fuel) {
   df.m <- melt(df, id=c("LAU1_code", "name"), value.name="energy")
   df.m <- cbind(df.m, colsplit(df.m$variable, "\\.", c("sector", "fuel")))
   df.m <- df.m[,-3]
-  df.m <- mutate(df.m, energy=as.numeric(str_replace(energy, "\\.\\.", NA)))
+  df.m <- mutate(df.m, energy=as.numeric(str_replace(df.m$energy, "\\.\\.", NA)))
   ## Return the result
   return(df.m)
 }
