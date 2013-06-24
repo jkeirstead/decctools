@@ -5,4 +5,4 @@ decctools 0.1.0
 
 * provides methods for accessing UK Dept of Energy and Climate Change statistics on energy consumption at local authority district, MSOA, and LSOA level.
 
-* provides methods for accessing grid fuel mix and carbon intensity of electricity using Elexon's BM Reports data.
+* provides methods for accessing grid fuel mix and carbon intensity of electricity using Elexon's BM Reports data, as archived by the charity Renewable Energy Foundation

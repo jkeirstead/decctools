@@ -12,6 +12,7 @@
 \seealso{
   \code{\link{get_LAD_data}}, \code{\link{get_MSOA_data}},
   \code{\link{get_LSOA_data}},
-  \code{\link{get_lookup_table}}
+  \code{\link{get_lookup_table}},
+  \code{\link{get_grid_mix}}, \code{\link{get_grid_carbon}}
 }
 
