@@ -5,7 +5,9 @@ decctools is an R package that provides easy access to energy statistics from th
   * sub-national final energy consumption data at the local authority, middle super output area (MSOA), and lower super output area (LSOA) scales
 	
   * fuel mix data and the associated carbon intensity of grid electricity using Elexon balancing mechanism data
-	
+
+You must have either [Curl](http://curl.haxx.se/) or [Wget](http://www.gnu.org/software/wget/) installed to use this package.
+
 ## Sub-national statistics
 
 To access sub-national statistics, you will need to use one of three methods:

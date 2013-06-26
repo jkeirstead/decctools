@@ -26,8 +26,10 @@ get_remote_file <- function(url, dir, update_cache=FALSE) {
   ## If the file doesn't exist, then download it
   if (!file.exists(file_name) | update_cache) {
     method <- "curl"
+    extra <- ""
     if (system(method)==127) {
       method <- "wget"
+      extra <- "--no-check-certificate"
       if (system(method)==127) {
         stop("You must have either curl or wget installed.")
       }
@@ -36,7 +38,7 @@ get_remote_file <- function(url, dir, update_cache=FALSE) {
     if (!url.exists("http://www.google.com")) {
       stop("You must be connected to the internet to download this file.")
     } else {
-      download.file(url, file_name, mode="wb", method=method)
+      download.file(url, file_name, mode="wb", method=method, extra=extra)
     }
   }
   
