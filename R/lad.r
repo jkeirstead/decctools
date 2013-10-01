@@ -25,11 +25,16 @@
 get_LAD_data <- function(id, year, sector='total', fuel='total', dir) {
 
   ## Download the data if necessary
-  url <- "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/172997/Sub-national_total_final_energy_consumption_statistics__2005_-_2010.xlsx"
+  url <- "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/244786/september_2013_sub_national_total_final_energy_consumption_statistics.xlsx"
   file_name <- get_remote_file(url, dir)
   
   ## Load in the raw data from the spreadsheet
-  wb <- loadWorkbook(file_name)
+  wb <- tryCatch({
+    loadWorkbook(file_name)
+  }, error=function(e) {
+    stop(sprintf("Error loading workbook:\n\t%s\nTried download file from %s.  Email package maintainer to see if URL has changed.", e, url))
+  })
+               
 
   ## Prep the year
   unit <- "GWh"
