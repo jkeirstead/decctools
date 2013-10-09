@@ -2,12 +2,13 @@
 #'
 #' Gets LAD (Local Administrative District) energy data from the DECC website, \url{http://www.decc.gov.uk}.
 #' Since the format of these files tends to change just enough to be irritating for dependent code, there is
-#' also an option that allows you to cache a local copy.
+#' also an option that allows you to cache a local copy.  Note that the total values do not contain the
+#' unallocated fuel values, which represent approximately 0.3% of the total demand.
 #'
 #' @param id the unique id of the LAD to fetch.  If not specified, then all LADs are retrieved.
 #' @param year the year to fetch. If not specified, then the most recent year is retrieved.  Only single years currently supported
-#' @param sector a vector of economic sectors to fetch.  Valid values are 'domestic', 'industrial', 'total'.
-#' @param fuel a vector of fuel types to fetch.  Valid values are 'coal', 'manufactured', 'petrol', 'gas', 'electricity', 'bioenergy', 'total'
+#' @param sector a vector of economic sectors to fetch.  Valid values are 'domestic', 'industrial', 'transport', 'total', 'all'.  Default = 'total'
+#' @param fuel a vector of fuel types to fetch.  Valid values are 'coal', 'manufactured', 'petrol', 'gas', 'electricity', 'bioenergy', 'total', 'all'. Default = 'total'
 #' @param dir an optional directory in which to cache the data
 #' @return a long data frame with the requested data.  The 'energy' column is measured in GWh.
 #' @keywords data energy
@@ -61,11 +62,11 @@ get_LAD_data <- function(id, year, sector='total', fuel='total', dir) {
   
   ## Read in the data
   sheet_name <- paste(year, unit)
-  df <- readWorksheet(wb, sheet_name, 4, 1, 421, 27)
+  df <- readWorksheet(wb, sheet_name, 4, 1, 421, 31)
   rm(wb)
   
   ## Since tmp contains all of the data, we now need to work some magic to get the right values
-  df <- clean_decc_data(df, sector, fuel)
+  df <- clean_decc_data(df)
 
   ## Subset on target ids
   if (!missing(id)) {
@@ -73,7 +74,16 @@ get_LAD_data <- function(id, year, sector='total', fuel='total', dir) {
       df <- df[which(df$LAU1_code %in% id),]
     }
   }
-  
+
+  ## Subset to select only those sectors and fuels of interest
+  ## If all is given as either sector or fuel then all options are returned
+  if (!is.element("all", sector) & !is.element("all", fuel)) {
+    df <- df[which(df$sector %in% sector & df$fuel %in% fuel), ]
+  } else if (is.element("all", sector) & !is.element("all", fuel)) {
+    df <- df[which(df$fuel %in% fuel),] 
+  } else if (!is.element("all", sector) & is.element("all", fuel)) {
+    df <- df[which(df$sector %in% sector),]
+  }
   
   ## Renumber rows and return the result
   row.names(df) <- 1:nrow(df)
@@ -99,51 +109,45 @@ get_valid_years <- function(wb, unit="GWh") {
 }
   
 
-#' Adds DECC energy consumption data to a specified data frame.  Currently
-#' only selects domestic electricity and gas.
+#' Cleans the raw DECC energy consumption data for easier use
 #'
 #' @param df the raw DECC data frame from the spreadsheet
-#' @param sector the sector to extract
-#' @param fuel the fuels to extract
-#' @return a long database
-clean_decc_data <- function(df, sector, fuel) {
+#' @return a long database with headers by sector and fuel
+clean_decc_data <- function(df) {
 
   ## Manually define the column names
   sectors <- c(NA, NA, rep(c("industrial", "domestic", "total", NA), 2),
               "industrial", "domestic", "transport", "transport", "total", NA,
               rep(c("industrial", "domestic", "total", NA), 2),
-              "total", NA, "total")
+              "total", NA, "total", NA, "industrial", "domestic", "transport")
   fuels <- c(NA, NA, rep("coal", 3), NA, rep("manufactured", 3), NA,
              rep("petrol", 5), NA, rep("gas", 3), NA, rep("electricity", 3), NA,
-             "bioenergy", NA, "total")
-
-
-  ## Make sure we've got valid inputs
-  sector <- unique(replace(sector, which(is.na(sector)), "total"))
-  fuel <- unique(replace(fuel, which(is.na(fuel)), "total"))
-
-  ## Calculate the columns that meet both criteria
-  sector_cols <- which(sectors %in% sector)
-  fuel_cols <- which(fuels %in% fuel)
-  common_cols <- intersect(sector_cols, fuel_cols)
-  
-  ## Columns 1 and 2 are the LAU code and name
-  good_cols <- c(1, 2, common_cols)  
-  df <- df[, good_cols]
+             "bioenergy", NA, "total", NA, rep("total", 3))
 
   ## Define the new column names
-  sector_names <- sectors[common_cols]
-  fuel_names <- fuels[common_cols]
-  selection_cols <- paste(sector_names, fuel_names, sep=".")
-
-  new_col_names <- c("LAU1_code", "name", selection_cols)
-  names(df) <- new_col_names
+  col_names<- paste(sectors, fuels, sep=".")
+  names(df) <- c("LAU1_code", "name", col_names[-c(1:2)])
 
   ## Now melt the data and final tidy
   df.m <- melt(df, id=c("LAU1_code", "name"), value.name="energy")
   df.m <- cbind(df.m, colsplit(df.m$variable, "\\.", c("sector", "fuel")))
   df.m <- df.m[,-3]
-  df.m <- mutate(df.m, energy=as.numeric(str_replace(df.m$energy, "\\.\\.", NA)))
+
+  orig <- df.m$energy
+  ## Replace .. matches with NA
+  df.m$energy <- gsub("\\.\\.", NA, df.m$energy)
+  ## Replace , with nothing
+  df.m$energy <- gsub(",", "", df.m$energy)
+  ## Get rid of leading asterisks
+  df.m$energy <- gsub("\\*\\s?", "", df.m$energy)
+  df.m$energy <- as.numeric(df.m$energy)
+
+  ## Remove NA
+  df.m <- df.m[which(!is.na(df.m$energy)),]
+
+  ## Remove the regional totals
+  df.m <- df.m[-grep("TOTAL", df.m$name),]
+  
   ## Return the result
   return(df.m)
 }
