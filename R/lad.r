@@ -136,7 +136,6 @@ clean_decc_data <- function(df) {
   df.m <- cbind(df.m, colsplit(df.m$variable, "\\.", c("sector", "fuel")))
   df.m <- df.m[,-3]
 
-  orig <- df.m$energy
   ## Replace .. matches with NA
   df.m$energy <- gsub("\\.\\.", NA, df.m$energy)
   ## Replace , with nothing
