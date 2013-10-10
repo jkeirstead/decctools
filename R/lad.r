@@ -20,6 +20,7 @@
 #' }
 #' # Gets energy data for electricity and gas use in the domestic sector in the most recent year
 #' # This example requires a working internet connection
+#' library(RCurl)
 #' if (url.exists("http://www.google.com")) {
 #'   df <- get_LAD_data(sector="domestic", fuel=c("electricity", "gas"))
 #' }
@@ -95,6 +96,7 @@ get_LAD_data <- function(id, year, sector='total', fuel='total', dir) {
 #' @param wb the workbook to search
 #' @param unit the measurement unit of interest.  Defaults to GWh
 #' @return a vector of years with data in the spreadsheet
+#' @import stringr
 get_valid_years <- function(wb, unit="GWh") {
   
   ## Get a list of the sheets
@@ -113,6 +115,7 @@ get_valid_years <- function(wb, unit="GWh") {
 #'
 #' @param df the raw DECC data frame from the spreadsheet
 #' @return a long database with headers by sector and fuel
+#' @import reshape2
 clean_decc_data <- function(df) {
 
   ## Manually define the column names

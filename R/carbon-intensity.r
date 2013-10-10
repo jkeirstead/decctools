@@ -16,6 +16,7 @@
 #'   data <- get_grid_mix(start, end) # Gets data for 1st week of January 2010
 #' }
 #' @export
+#' @import stringr XML
 get_grid_mix <- function(start, end) {
 
   ## Coerce strings to proper dates
@@ -78,6 +79,7 @@ get_grid_mix <- function(start, end) {
 #'   carbon <- get_grid_carbon(start, end) # Gets grid carbon for 1st week of January 2010
 #' }
 #' @export
+#' @import reshape2
 get_grid_carbon <- function(start, end) {
 
   ## Get the grid mix data for this period

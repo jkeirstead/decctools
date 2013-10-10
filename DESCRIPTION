@@ -12,11 +12,10 @@ Description: decctools provides functions for retrieving energy
     total final energy consumption statistics at the local authority, MSOA,
     and LSOA geographies.  Methods for calculating the generation mix of
     grid electricity and its associated carbon intensity are also provided.
-Depends:
+Imports:
     stringr,
     XLConnect,
     XML,
-    lubridate,
     reshape2,
     RCurl,
     plyr

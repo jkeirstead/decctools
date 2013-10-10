@@ -14,11 +14,13 @@
   currently supported}
 
   \item{sector}{a vector of economic sectors to fetch.
-  Valid values are 'domestic', 'industrial', 'total'.}
+  Valid values are 'domestic', 'industrial', 'transport',
+  'total', 'all'.  Default = 'total'}
 
   \item{fuel}{a vector of fuel types to fetch.  Valid
   values are 'coal', 'manufactured', 'petrol', 'gas',
-  'electricity', 'bioenergy', 'total'}
+  'electricity', 'bioenergy', 'total', 'all'. Default =
+  'total'}
 
   \item{dir}{an optional directory in which to cache the
   data}
@@ -32,7 +34,9 @@
   the DECC website, \url{http://www.decc.gov.uk}. Since the
   format of these files tends to change just enough to be
   irritating for dependent code, there is also an option
-  that allows you to cache a local copy.
+  that allows you to cache a local copy.  Note that the
+  total values do not contain the unallocated fuel values,
+  which represent approximately 0.3% of the total demand.
 }
 \examples{
 \dontrun{
@@ -41,6 +45,7 @@ lad_data <- get_LAD_data()
 }
 # Gets energy data for electricity and gas use in the domestic sector in the most recent year
 # This example requires a working internet connection
+library(RCurl)
 if (url.exists("http://www.google.com")) {
   df <- get_LAD_data(sector="domestic", fuel=c("electricity", "gas"))
 }
