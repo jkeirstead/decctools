@@ -2,7 +2,7 @@ Package: decctools
 Type: Package
 Author: James Keirstead <j.keirstead@imperial.ac.uk>
 Maintainer: James Keirstead <j.keirstead@imperial.ac.uk>
-Version: 0.1.2
+Version: 0.1.3
 License: GPL-2
 Title: Get energy data from the UK Dept of Energy and Climate Change
 Description: decctools provides functions for retrieving energy
@@ -11,7 +11,7 @@ Description: decctools provides functions for retrieving energy
     total final energy consumption statistics at the local authority, MSOA,
     and LSOA geographies.  Methods for calculating the generation mix of
     grid electricity and its associated carbon intensity are also provided.
-Date: 2013-06-26
+Date: 2013-11-18
 Depends:
     stringr,
     XLConnect,

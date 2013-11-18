@@ -26,7 +26,9 @@ get_remote_file <- function(url, dir, update_cache=FALSE) {
   ## If the file doesn't exist, then download it
   if (!file.exists(file_name) | update_cache) {
     method <- "curl"
-    extra <- ""
+    options(RCurlOptions=list(cainfo = system.file("CurlSSL", "cacert.pem", package = "RCurl"),
+                ssl.verifypeer=FALSE))
+    extra <- "--insecure"  ## add ssl.verifypeer=FALSE if this fails
     if (system(method)==127) {
       method <- "wget"
       extra <- "--no-check-certificate"

@@ -45,7 +45,7 @@ get_grid_mix <- function(start, end) {
   base_url <- "http://www.ref.org.uk/fuel/tablebysp.php?valdate="
   for (i in 1:length(dates)) {
     url <- paste(base_url, dates[i], sep="")
-    table <- readHTMLTable(url, colClasses=columns)[[2]]
+    table <- suppressWarnings(readHTMLTable(url, colClasses=columns)[[2]])
     tmp[[i]] <- table
   }
   data <- do.call("rbind", tmp)
@@ -107,7 +107,7 @@ get_last_date <- function() {
   
   base_url <- "http://www.ref.org.uk/fuel/tablebysp.php"
   columns <- c("character","numeric", rep("FormattedNumber", 14)) 
-  table <- readHTMLTable(base_url, colClasses=columns)[[2]]
+  table <- suppressWarnings(readHTMLTable(base_url, colClasses=columns)[[2]])
   last_date <- as.Date(as.character(tail(table$SD, 1)))
   return(last_date)
 }
