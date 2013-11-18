@@ -7,6 +7,7 @@
 #' @param dir the directory to store the cached file in.  If undefined, it defaults to $TEMP/decctools.
 #' @param update_cache boolean.  Should the cached file be overwritten?  Default = FALSE
 #' @return the file name (path)
+#' @import stringr RCurl
 get_remote_file <- function(url, dir, update_cache=FALSE) {
 
   ## Currently only processes one URL
@@ -28,14 +29,14 @@ get_remote_file <- function(url, dir, update_cache=FALSE) {
     method <- "curl"
     options(RCurlOptions=list(cainfo = system.file("CurlSSL", "cacert.pem", package = "RCurl"),
                 ssl.verifypeer=FALSE))
-    extra <- "--insecure"  ## add ssl.verifypeer=FALSE if this fails
+    extra <- "--insecure"  
     if (system(method)==127) {
       method <- "wget"
       extra <- "--no-check-certificate"
       if (system(method)==127) {
         stop("You must have either curl or wget installed.")
       }
-    }
+    } 
     
     if (!url.exists("http://www.google.com")) {
       stop("You must be connected to the internet to download this file.")
@@ -80,6 +81,7 @@ get_package_name <- function() {
 #' @param dir (optional) directory to save the lookup table information
 #' @return a data frame
 #' @export
+#' @import stringr
 get_lookup_table <- function(urban_classes=c("LU", "MU"), dir) {
 
   ## The lookup data is available in the LSOA electricity demands data from DECC

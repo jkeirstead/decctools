@@ -12,10 +12,12 @@
 #' # These require a working internet connection
 #' start <- "2010-01-01"
 #' end <- "2010-01-07"
+#' library(RCurl)
 #' if (url.exists("http://www.google.com")) {
 #'   data <- get_grid_mix(start, end) # Gets data for 1st week of January 2010
 #' }
 #' @export
+#' @import stringr XML
 get_grid_mix <- function(start, end) {
 
   ## Coerce strings to proper dates
@@ -74,10 +76,12 @@ get_grid_mix <- function(start, end) {
 #' # These require a working internet connection
 #' start <- "2010-01-01"
 #' end <- "2010-01-07"
+#' library(RCurl)
 #' if (url.exists("http://www.google.com")) {
 #'   carbon <- get_grid_carbon(start, end) # Gets grid carbon for 1st week of January 2010
 #' }
 #' @export
+#' @import reshape2
 get_grid_carbon <- function(start, end) {
 
   ## Get the grid mix data for this period

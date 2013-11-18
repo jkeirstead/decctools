@@ -13,7 +13,7 @@ only selects domestic electricity and gas.}
   \item{fuel}{the fuels to extract}
 }
 \value{
-  a long database
+  a long database with headers by sector and fuel
 }
 \description{
   Adds DECC energy consumption data to a specified data

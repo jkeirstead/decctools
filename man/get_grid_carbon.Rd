@@ -21,6 +21,7 @@
 # These require a working internet connection
 start <- "2010-01-01"
 end <- "2010-01-07"
+library(RCurl)
 if (url.exists("http://www.google.com")) {
   carbon <- get_grid_carbon(start, end) # Gets grid carbon for 1st week of January 2010
 }
