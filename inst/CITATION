@@ -3,8 +3,8 @@ citHeader("To cite decctools in publications, please use:")
 citEntry(entry = "manual",
   author = "James Keirstead",
   title = "decctools: tools for accessing UK energy statistics",
-  year = "2013",
-  note = "R package version 0.1.3",
+  year = "2014",
+  note = "R package version 0.1.4",
   url = "http://github.com/jkeirstead/decctools",
-  textVersion = "J. Keirstead (2013) decctools: tools for accessing UK energy statistics.  R package version 0.1.0. http://github.com/jkeirstead/decctools."
+  textVersion = "J. Keirstead (2014) decctools: tools for accessing UK energy statistics.  R package version 0.1.4. http://github.com/jkeirstead/decctools."
 )

@@ -1,3 +1,8 @@
+decctools 0.1.4
+---------------
+
+* Fixed get_last_date to cope with new REF website design
+
 decctools 0.1.3
 ---------------
 
