@@ -5,7 +5,8 @@
 #' @seealso \code{\link{get_LAD_data}}, \code{\link{get_MSOA_data}}, \code{\link{get_LSOA_data}}, \code{\link{get_lookup_table}}, \code{\link{get_grid_mix}}, \code{\link{get_grid_carbon}}
 #' @name decctools
 #' @docType package
-#' @import XLConnect plyr
+#' @import XLConnect
+#' @importFrom plyr llply ddply dlply mutate summarize
 NULL
 
 #' Descriptive data on local administrative districts
