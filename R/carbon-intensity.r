@@ -107,12 +107,23 @@ get_grid_carbon <- function(start, end) {
 #' Gets the date of the last update to the REF fuels mix database.
 #'
 #' @return a Date object
+#' @import lubridate
 get_last_date <- function() {
   
   base_url <- "http://www.ref.org.uk/fuel/tablebysp.php"
   columns <- c("character","numeric", rep("FormattedNumber", 14)) 
   table <- suppressWarnings(readHTMLTable(base_url, colClasses=columns)[[2]])
   last_date <- as.Date(as.character(tail(table$SD, 1)))
+
+  ## If the table isn't showing the data for some reason (which does happen),
+  ## revert to the last day of the previous month
+  if (length(last_date)==0) {
+      tmp <- Sys.Date()
+      day(tmp) <- 1
+      day(tmp) <- day(tmp)-1
+      last_date <- tmp
+  }
+      
   return(last_date)
 }
                        

@@ -3,6 +3,11 @@ decctools 0.2.0
 
 * Added support for all sectors and fuels in local administrative data
 
+decctools 0.1.4
+---------------
+
+* Fixed get_last_date to cope with new REF website design
+
 decctools 0.1.3
 ---------------
 

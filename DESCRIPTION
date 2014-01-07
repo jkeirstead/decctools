@@ -3,7 +3,7 @@ Type: Package
 Author: James Keirstead <j.keirstead@imperial.ac.uk>
 Maintainer: James Keirstead <j.keirstead@imperial.ac.uk>
 Version: 0.2.0
-Date: 2013-xx-xx
+Date: 2014-xx-xx
 License: GPL-2
 Title: Get energy data from the UK Dept of Energy and Climate Change
 Description: decctools provides functions for retrieving energy
@@ -19,6 +19,7 @@ Imports:
     XML,
     reshape2,
     RCurl,
+    lubridate,
     plyr
 LazyData: true
 Collate:
