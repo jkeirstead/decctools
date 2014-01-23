@@ -91,7 +91,16 @@ get_lookup_table <- function(urban_classes=c("LU", "MU"), dir) {
   file_name <- get_remote_file(url, dir)
 
   ## Load it into memory.  Only need first 4 columns
-  wb <- loadWorkbook(file_name)
+  wb <- tryCatch({
+      loadWorkbook(file_name)
+  }, error=function(e) {
+      message(sprintf("Error loading workbook:\n\n%s\nTried download file from %s.  Email package maintainer to see if URL has changed.  Returning an empty data frame.", e, url))
+      return(NULL)
+  })
+
+  ## If a valid workbook isn't found, return an empty data frame
+  if (is.null(wb)) return(data.frame())
+  
   data <- readWorksheet(wb, "LLSOA Electricity Domestic", startCol=1, endCol=4)
   names(data) <- c("LAU1_name", "LAU1_code", "MSOA_code", "LSOA_code")
 

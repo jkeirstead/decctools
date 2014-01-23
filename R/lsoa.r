@@ -55,7 +55,16 @@ parse_raw_LSOA_data <- function(l) {
   file_name <- get_remote_file(l$url, l$dir)
   
   ## Load it into memory
-  wb <- loadWorkbook(file_name)
+  wb <- tryCatch({
+      loadWorkbook(file_name)
+  }, error=function(e) {
+      message(sprintf("Error loading workbook:\n\n%s\nTried download file from %s.  Email package maintainer to see if URL has changed.  Returning an empty data frame.", e, l$url))
+    return(NULL)
+  })
+
+  ## If a valid workbook isn't found, return an empty data frame
+  if (is.null(wb)) return(data.frame())
+  
   data <- readWorksheet(wb, l$sheet_name)
   
   ## Perform any custom changes to the data set
@@ -129,7 +138,16 @@ get_LSOA_population <- function(dir) {
 
   ## Now open up the file and read the data
   ## Note that it is in two parts: English MLSOAs and Scottish IGZs
-  wb <- loadWorkbook(file_name)
+  wb <- tryCatch({
+      loadWorkbook(file_name)
+  }, error=function(e) {
+      message(sprintf("Error loading workbook:\n\n%s\nTried download file from %s.  Email package maintainer to see if URL has changed.  Returning an empty data frame.", e, url))
+      return(NULL)
+  })
+
+  ## If a valid workbook isn't found, return an empty data frame
+  if (is.null(wb)) return(data.frame())
+  
   pop_data <- readWorksheet(wb, "LLSOA England and Wales", startRow=2, startCol=3)
   rm(wb)
 

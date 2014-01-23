@@ -19,25 +19,28 @@
 #' lad_data <- get_LAD_data()
 #' }
 #' # Gets energy data for electricity and gas use in the domestic sector in the most recent year
-#' # This example requires a working internet connection
-#' library(RCurl)
-#' if (url.exists("http://www.google.com")) {
-#'   df <- get_LAD_data(sector="domestic", fuel=c("electricity", "gas"))
-#' }
+#' # Depending on the status of DECC servers, this can sometimes fail.  In which case, an empty
+#' # data frame is returned
+#' 
+#' df <- get_LAD_data(sector="domestic", fuel=c("electricity", "gas"))
+#'    
 get_LAD_data <- function(id, year, sector='total', fuel='total', dir) {
 
   ## Download the data if necessary
-  url <- "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/244786/september_2013_sub_national_total_final_energy_consumption_statistics.xlsx"
+  url <- "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/274024/sub_national_total_final_energy_consumption_statistics_2005_2011.xlsx"
   file_name <- get_remote_file(url, dir)
-  
+
   ## Load in the raw data from the spreadsheet
   wb <- tryCatch({
     loadWorkbook(file_name)
   }, error=function(e) {
-    stop(sprintf("Error loading workbook:\n\t%s\nTried download file from %s.  Email package maintainer to see if URL has changed.", e, url))
+    message(sprintf("Error loading workbook:\n\n%s\nTried download file from %s.  Email package maintainer to see if URL has changed.  Returning an empty data frame.", e, url))
+    return(NULL)
   })
-               
 
+  ## If a valid workbook isn't found, return an empty data frame
+  if (is.null(wb)) return(data.frame())
+  
   ## Prep the year
   unit <- "GWh"
   valid_years <- get_valid_years(wb, unit)
