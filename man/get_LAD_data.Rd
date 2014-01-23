@@ -40,11 +40,10 @@
 lad_data <- get_LAD_data()
 }
 # Gets energy data for electricity and gas use in the domestic sector in the most recent year
-# This example requires a working internet connection
-library(RCurl)
-if (url.exists("http://www.google.com")) {
-  df <- get_LAD_data(sector="domestic", fuel=c("electricity", "gas"))
-}
+# Depending on the status of DECC servers, this can sometimes fail.  In which case, an empty
+# data frame is returned
+
+df <- get_LAD_data(sector="domestic", fuel=c("electricity", "gas"))
 }
 \keyword{data}
 \keyword{energy}
