@@ -1,3 +1,10 @@
+decctools 0.1.5
+---------------
+
+* Updated get_LAD_data URL
+
+* Added error trapping for fetching of remote files
+
 decctools 0.1.4
 ---------------
 
