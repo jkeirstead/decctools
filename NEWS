@@ -3,6 +3,13 @@ decctools 0.2.0
 
 * Added support for all sectors and fuels in local administrative data
 
+decctools 0.1.5
+---------------
+
+* Updated get_LAD_data URL
+
+* Added error trapping for fetching of remote files
+
 decctools 0.1.4
 ---------------
 
