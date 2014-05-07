@@ -1,3 +1,8 @@
+decctools 0.1.6
+---------------
+
+* Improved use of RCurl in response to CRAN comments
+
 decctools 0.1.5
 ---------------
 

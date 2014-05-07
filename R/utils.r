@@ -26,23 +26,24 @@ get_remote_file <- function(url, dir, update_cache=FALSE) {
 
   ## If the file doesn't exist, then download it
   if (!file.exists(file_name) | update_cache) {
-    method <- "curl"
-    options(RCurlOptions=list(cainfo = system.file("CurlSSL", "cacert.pem", package = "RCurl"),
-                ssl.verifypeer=FALSE))
-    extra <- "--insecure"  
-    if (system(method)==127) {
-      method <- "wget"
-      extra <- "--no-check-certificate"
-      if (system(method)==127) {
-        stop("You must have either curl or wget installed.")
+
+      ## see if the certificates are installed
+      certs <- system.file("CurlSSL", "cacert.pem", package="RCurl")
+      if (file.exists(certs)) {
+          options(RCurlOptions=list(cainfo=certs))
+      } else {
+          warning(sprintf("Unable to find SSL certificates file.  Running without SSL validation.",
+                          certs))
+          options(RCurlOptions=list(ssl.verifypeer=FALSE))
       }
-    } 
-    
-    if (!url.exists("http://www.google.com")) {
-      stop("You must be connected to the internet to download this file.")
-    } else {
-      download.file(url, file_name, mode="wb", method=method, extra=extra)
-    }
+
+      if (!url.exists("http://www.google.com")) {
+          stop("You must be connected to the internet to download this file.")
+      } else {
+          f <- CFILE(file_name, mode="wb")
+          curlPerform(url=url, writedata=f@ref)
+          close(f)
+      }    
   }
   
   return(file_name)
