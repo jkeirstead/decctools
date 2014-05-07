@@ -2,8 +2,7 @@
 \alias{get_LAD_data}
 \title{Get LAD energy consumption data}
 \usage{
-  get_LAD_data(id, year, sector = "total", fuel = "total",
-    dir)
+get_LAD_data(id, year, sector = "total", fuel = "total", dir)
 }
 \arguments{
   \item{id}{the unique id of the LAD to fetch.  If not
@@ -24,15 +23,15 @@
   data}
 }
 \value{
-  a long data frame with the requested data.  The 'energy'
-  column is measured in GWh.
+a long data frame with the requested data.  The 'energy'
+column is measured in GWh.
 }
 \description{
-  Gets LAD (Local Administrative District) energy data from
-  the DECC website, \url{http://www.decc.gov.uk}. Since the
-  format of these files tends to change just enough to be
-  irritating for dependent code, there is also an option
-  that allows you to cache a local copy.
+Gets LAD (Local Administrative District) energy data from
+the DECC website, \url{http://www.decc.gov.uk}. Since the
+format of these files tends to change just enough to be
+irritating for dependent code, there is also an option that
+allows you to cache a local copy.
 }
 \examples{
 \dontrun{

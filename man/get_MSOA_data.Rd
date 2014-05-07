@@ -2,8 +2,8 @@
 \alias{get_MSOA_data}
 \title{Get MSOA energy consumption data}
 \usage{
-  get_MSOA_data(id, sector = c("domestic", "nondomestic"),
-    fuel = c("electricity", "gas"), dir)
+get_MSOA_data(id, sector = c("domestic", "nondomestic"),
+  fuel = c("electricity", "gas"), dir)
 }
 \arguments{
   \item{id}{the unique id of the MSOA to fetch.  If not
@@ -19,15 +19,15 @@
   of the data}
 }
 \value{
-  a long data frame with the requested data.  The 'energy'
-  column is measured in GWh.
+a long data frame with the requested data.  The 'energy'
+column is measured in GWh.
 }
 \description{
-  This function fetches MSOA (Middle Super Output Area)
-  data from the DECC website from 2010.  Since the format
-  of these files tends to change just enough to be
-  irritating for dependent code, there is also an option
-  that allows you to cache a local copy.
+This function fetches MSOA (Middle Super Output Area) data
+from the DECC website from 2010.  Since the format of these
+files tends to change just enough to be irritating for
+dependent code, there is also an option that allows you to
+cache a local copy.
 }
 \examples{
 \dontrun{

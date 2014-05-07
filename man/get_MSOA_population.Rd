@@ -2,21 +2,21 @@
 \alias{get_MSOA_population}
 \title{Gets the 2011 population estimates for all MSOAs (including Scottish IGZs)}
 \source{
-  \url{https://www.gov.uk/government/statistical-data-sets/socio-economic-data-for-mlsoa-igz-and-llsoa-electricity-and-gas-estimates}
+\url{https://www.gov.uk/government/statistical-data-sets/socio-economic-data-for-mlsoa-igz-and-llsoa-electricity-and-gas-estimates}
 }
 \usage{
-  get_MSOA_population(dir)
+get_MSOA_population(dir)
 }
 \arguments{
   \item{dir}{an (optional) directory in which to save the
   downloaded data}
 }
 \value{
-  a data frame with the MSOA_code, population, area (in
-  hectares), and number of households
+a data frame with the MSOA_code, population, area (in
+hectares), and number of households
 }
 \description{
-  This function gets the socio-demographic data associated
-  with each Middle Super Output Area (MSOA).
+This function gets the socio-demographic data associated
+with each Middle Super Output Area (MSOA).
 }
 

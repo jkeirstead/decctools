@@ -2,13 +2,13 @@
 \alias{get_last_date}
 \title{Gets the most recent date for available data}
 \usage{
-  get_last_date()
+get_last_date()
 }
 \value{
-  a Date object
+a Date object
 }
 \description{
-  Gets the date of the last update to the REF fuels mix
-  database.
+Gets the date of the last update to the REF fuels mix
+database.
 }
 

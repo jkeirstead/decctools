@@ -3,7 +3,7 @@
 \title{Adds DECC energy consumption data to a specified data frame.  Currently
 only selects domestic electricity and gas.}
 \usage{
-  clean_decc_data(df, sector, fuel)
+clean_decc_data(df, sector, fuel)
 }
 \arguments{
   \item{df}{the raw DECC data frame from the spreadsheet}
@@ -13,11 +13,11 @@ only selects domestic electricity and gas.}
   \item{fuel}{the fuels to extract}
 }
 \value{
-  a long database with headers by sector and fuel
+a long database with headers by sector and fuel
 }
 \description{
-  Adds DECC energy consumption data to a specified data
-  frame.  Currently only selects domestic electricity and
-  gas.
+Adds DECC energy consumption data to a specified data
+frame.  Currently only selects domestic electricity and
+gas.
 }
 
