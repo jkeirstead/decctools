@@ -38,11 +38,13 @@ allows you to cache a local copy.
 # Gets energy data for total fuels and sectors for most recent year
 lad_data <- get_LAD_data()
 }
+
+\dontrun{
 # Gets energy data for electricity and gas use in the domestic sector in the most recent year
 # Depending on the status of DECC servers, this can sometimes fail.  In which case, an empty
-# data frame is returned
-
+# data frame is returned.
 df <- get_LAD_data(sector="domestic", fuel=c("electricity", "gas"))
+}
 }
 \keyword{data}
 \keyword{energy}
