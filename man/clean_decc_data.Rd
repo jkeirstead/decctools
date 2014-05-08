@@ -8,7 +8,7 @@
   \item{df}{the raw DECC data frame from the spreadsheet}
 }
 \value{
-  a long database with headers by sector and fuel
+a long database with headers by sector and fuel
 }
 \description{
   Cleans the raw DECC energy consumption data for easier

@@ -2,7 +2,7 @@
 \alias{get_valid_years}
 \title{Determines which year values are valid}
 \usage{
-  get_valid_years(wb, unit = "GWh")
+get_valid_years(wb, unit = "GWh")
 }
 \arguments{
   \item{wb}{the workbook to search}
@@ -11,9 +11,9 @@
   to GWh}
 }
 \value{
-  a vector of years with data in the spreadsheet
+a vector of years with data in the spreadsheet
 }
 \description{
-  Determines which year values are valid
+Determines which year values are valid
 }
 

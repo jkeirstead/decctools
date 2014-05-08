@@ -2,8 +2,7 @@
 \alias{get_LAD_data}
 \title{Get LAD energy consumption data}
 \usage{
-  get_LAD_data(id, year, sector = "total", fuel = "total",
-    dir)
+get_LAD_data(id, year, sector = "total", fuel = "total", dir)
 }
 \arguments{
   \item{id}{the unique id of the LAD to fetch.  If not
@@ -26,8 +25,8 @@
   data}
 }
 \value{
-  a long data frame with the requested data.  The 'energy'
-  column is measured in GWh.
+a long data frame with the requested data.  The 'energy'
+column is measured in GWh.
 }
 \description{
   Gets LAD (Local Administrative District) energy data from
@@ -43,11 +42,13 @@
 # Gets energy data for total fuels and sectors for most recent year
 lad_data <- get_LAD_data()
 }
+
+\dontrun{
 # Gets energy data for electricity and gas use in the domestic sector in the most recent year
 # Depending on the status of DECC servers, this can sometimes fail.  In which case, an empty
-# data frame is returned
-
+# data frame is returned.
 df <- get_LAD_data(sector="domestic", fuel=c("electricity", "gas"))
+}
 }
 \keyword{data}
 \keyword{energy}

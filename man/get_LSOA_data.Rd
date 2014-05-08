@@ -2,7 +2,7 @@
 \alias{get_LSOA_data}
 \title{Get LSOA energy consumption data}
 \usage{
-  get_LSOA_data(id, fuel = c("electricity", "gas"), dir)
+get_LSOA_data(id, fuel = c("electricity", "gas"), dir)
 }
 \arguments{
   \item{id}{a vector of LSOA ids to fetch.  If not
@@ -15,12 +15,12 @@
   of the data}
 }
 \value{
-  a long data frame with the requested data.  The 'energy'
-  column is measured in GWh.
+a long data frame with the requested data.  The 'energy'
+column is measured in GWh.
 }
 \description{
-  This function fetches LSOA (Lower Super Output Area) data
-  from the DECC website.
+This function fetches LSOA (Lower Super Output Area) data
+from the DECC website.
 }
 \examples{
 \dontrun{

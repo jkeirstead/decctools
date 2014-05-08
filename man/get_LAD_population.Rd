@@ -2,16 +2,16 @@
 \alias{get_LAD_population}
 \title{Gets the 2010 population estimates for all local authority districts}
 \usage{
-  get_LAD_population()
+get_LAD_population()
 }
 \value{
-  a data frame with the LAU1_code and population
+a data frame with the LAU1_code and population
 }
 \description{
-  This is a convenience function that returns the
-  population data from \code{\link{LAD_metadata}}.
+This is a convenience function that returns the population
+data from \code{\link{LAD_metadata}}.
 }
 \seealso{
-  \code{\link{LAD_metadata}}
+\code{\link{LAD_metadata}}
 }
 
