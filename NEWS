@@ -1,7 +1,7 @@
 decctools 0.2.0
 ---------------
 
-* Added support for all sectors and fuels in local administrative data
+* Added support for accessing all years of MSOA data
 
 decctools 0.1.6
 ---------------
