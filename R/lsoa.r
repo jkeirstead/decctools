@@ -30,6 +30,7 @@ get_LSOA_data <- function(id, year=max(get_LSOA_years()), fuel=c("electricity", 
     if (length(setdiff(year, valid))>0) {
         warning("Invalid years detected.  Using available values; see get_lsoa_years()")
         year <- intersect(year, valid)
+        if(length(year)==0) year <- max(valid)
     }
 
     

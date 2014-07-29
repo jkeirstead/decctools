@@ -1,30 +1,30 @@
-#' Get MSOA energy consumption data
-#'
-#' This function fetches MSOA (Middle Super Output Area) data from the
-#' DECC website.  Since the format of these files tends to change just
-#' enough to be irritating for dependent code, there is also an option
-#' that allows you to cache a local copy.
-#'
-#' @param id the unique id of the MSOA to fetch.  If not specified,
-#' then all MSOAs are retrieved.
-#' @param year the year for which you want data.  Defaults to the most
-#' recent year available.
-#' @param sector the economic sector to fetch.  Valid values are
-#' 'domestic', 'nondomestic'
-#' @param fuel the fuel type to fetch.  Valid values are
-#' 'electricity', 'gas'
-#' @param dir an optional directory in which to save a copy of the
-#' data
-#' @return a long data frame with the requested data.  The 'energy'
-#' column is measured in GWh.
-#' @keywords data energy
-#' @export
-#' @import plyr
-#' @examples
-#' \dontrun{
-#' msoa_data <- get_MSOA_data() # Gets all data
-#' }
-#' 
+##' Get MSOA energy consumption data
+##'
+##' This function fetches MSOA (Middle Super Output Area) data from the
+##' DECC website.  Since the format of these files tends to change just
+##' enough to be irritating for dependent code, there is also an option
+##' that allows you to cache a local copy.
+##'
+##' @param id the unique id of the MSOA to fetch.  If not specified,
+##' then all MSOAs are retrieved.
+##' @param year the year for which you want data.  Defaults to the most
+##' recent year available.
+##' @param sector the economic sector to fetch.  Valid values are
+##' 'domestic', 'nondomestic'
+##' @param fuel the fuel type to fetch.  Valid values are
+##' 'electricity', 'gas'
+##' @param dir an optional directory in which to save a copy of the
+##' data
+##' @return a long data frame with the requested data.  The 'energy'
+##' column is measured in GWh.
+##' @keywords data energy
+##' @export
+##' @import plyr
+##' @examples
+##' \dontrun{
+##' msoa_data <- get_MSOA_data() # Gets all data
+##' }
+##' 
 get_MSOA_data <- function(id, year=max(get_msoa_years()), sector=c("domestic", "nondomestic"), fuel=c("electricity", "gas"), dir) {
 
     ## Check for valid years
@@ -32,6 +32,7 @@ get_MSOA_data <- function(id, year=max(get_msoa_years()), sector=c("domestic", "
     if (length(setdiff(year, valid))>0) {
         warning("Invalid years detected.  Using available values; see get_msoa_years()")
         year <- intersect(year, valid)
+        if(length(year)==0) year <- max(valid)
     }
     
     ## Because the format of each spreadsheet is slightly different we
