@@ -1,7 +1,7 @@
 decctools 0.2.0
 ---------------
 
-* Added support for accessing all years of LSOA and MSOA data
+* Added support for accessing all years of LAD, LSOA, and MSOA data
 
 decctools 0.1.6
 ---------------

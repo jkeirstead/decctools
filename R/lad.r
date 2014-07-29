@@ -73,35 +73,45 @@ get_LAD_data <- function(id, year=max(get_LAD_years()), sector='total', fuel='to
     }
   
     ## Read in the data
-    unit <- "GWh"
-    sheet_name <- paste(year, unit)
-    df <- readWorksheet(wb, sheet_name, 4, 1, 421, 31)
-    rm(wb)
-    
-    ## Since tmp contains all of the data, we now need to work some
-    ## magic to get the right values
-    df <- clean_decc_data(df)
-    
-    ## Subset on target ids
-    if (!missing(id)) {
-        if (!is.na(id)) {
-            df <- df[which(df$LAU1_code %in% id),]
-        }
-    }
+    df <- lapply(year, function(y, id) {
 
-    ## Subset to select only those sectors and fuels of interest If
-    ## all is given as either sector or fuel then all options are
-    ## returned
-    if (!is.element("all", sector) & !is.element("all", fuel)) {
-        df <- df[which(df$sector %in% sector & df$fuel %in% fuel), ]
-    } else if (is.element("all", sector) & !is.element("all", fuel)) {
-        df <- df[which(df$fuel %in% fuel),] 
-    } else if (!is.element("all", sector) & is.element("all", fuel)) {
-        df <- df[which(df$sector %in% sector),]
-    }
-  
-    ## Renumber rows and return the result
-    row.names(df) <- 1:nrow(df)
+        unit <- "GWh"
+        sheet_name <- paste(y, unit)
+
+        df <- readWorksheet(wb, sheet_name, 4, 1, 421, 31)
+    
+        ## Since tmp contains all of the data, we now need to work some
+        ## magic to get the right values
+        df <- clean_decc_data(df)
+        df <- cbind(df, year=y)
+        
+        ## Subset on target ids
+        if (!missing(id)) {
+            if (!is.na(id)) {
+                df <- df[which(df$LAU1_code %in% id),]
+            }
+        }
+        
+        ## Subset to select only those sectors and fuels of interest If
+        ## all is given as either sector or fuel then all options are
+        ## returned
+        if (!is.element("all", sector) & !is.element("all", fuel)) {
+            df <- df[which(df$sector %in% sector & df$fuel %in% fuel), ]
+        } else if (is.element("all", sector) & !is.element("all", fuel)) {
+            df <- df[which(df$fuel %in% fuel),] 
+        } else if (!is.element("all", sector) & is.element("all", fuel)) {
+            df <- df[which(df$sector %in% sector),]
+        }
+        
+        ## Renumber rows and return the result
+        row.names(df) <- 1:nrow(df)
+        return(df)
+    })
+
+    rm(wb)
+
+    ## Combine back into a data frame
+    df <- do.call("rbind", df)
     return(df)
 }
 
@@ -130,7 +140,8 @@ get_LAD_years <- function() {
 
     ## Get a list of the sheets
     sheets <- getSheets(wb)
-
+    rm(wb)
+    
     ## Keep only those with the units in the name
     sheets <- sheets[grep("GWh", sheets)]
 
