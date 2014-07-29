@@ -1,17 +1,22 @@
-#' Get LSOA energy consumption data
-#'
-#' This function fetches LSOA (Lower Super Output Area) data from the DECC website.
-#'
-#' @param id a vector of LSOA ids to fetch.  If not specified, then all LSOAs are retrieved.
-#' @param fuel the fuel type to fetch.  Valid values are 'electricity', 'gas'
-#' @param dir an optional directory in which to store a copy of the data
-#' @return a long data frame with the requested data.  The 'energy' column is measured in GWh.
-#' @keywords data energy
-#' @export
-#' @examples
-#' \dontrun{
-#' lsoa_data <- get_LSOA_data() # Gets all data
-#' }
+##' Get LSOA energy consumption data
+##'
+##' This function fetches LSOA (Lower Super Output Area) data from the
+##' DECC website.
+##'
+##' @param id a vector of LSOA ids to fetch.  If not specified, then
+##' all LSOAs are retrieved.
+##' @param fuel the fuel type to fetch.  Valid values are
+##' 'electricity', 'gas'
+##' @param dir an optional directory in which to store a copy of the
+##' data
+##' @return a long data frame with the requested data.  The 'energy'
+##' column is measured in GWh.
+##' @keywords data energy
+##' @export
+##' @examples
+##' \dontrun{
+##' lsoa_data <- get_LSOA_data() # Gets all data
+##' }
 get_LSOA_data <- function(id, fuel=c("electricity", "gas"), dir) {
 
   ## As with the MSOA stuff, we'll prepare a list of all the parameters and then process them one by one.
@@ -84,12 +89,12 @@ parse_raw_LSOA_data <- function(l) {
   return(data)
 }
 
-#' Builds a master set of parameters for MSOA data
-#'
-#' Creates a list of various parameters needed to download and extract
-#' MSOA data from the DECC website.
-#'
-#' @param dir the directory in which to store a copy of the data
+##' Builds a master set of parameters for MSOA data
+##'
+##' Creates a list of various parameters needed to download and extract
+##' MSOA data from the DECC website.
+##'
+##' @param dir the directory in which to store a copy of the data
 get_master_LSOA_params_list <- function(dir) {
 
   ## First specify the urls
@@ -122,14 +127,33 @@ get_master_LSOA_params_list <- function(dir) {
 
 }
 
-#' Gets the 2011 population estimates for all LSOAs
-#'
-#' This function gets the socio-demographic data associated with each Lower Super Output Area (LSOA). These data only cover England and Wales.
-#'
-#' @param dir an (optional) directory in which to save the downloaded data
-#' @source \url{https://www.gov.uk/government/statistical-data-sets/socio-economic-data-for-mlsoa-igz-and-llsoa-electricity-and-gas-estimates}
-#' @export
-#' @return a data frame with the LSOA_code, population, area (in hectares), and number of households
+##' Gets the years for which LSOA data are available
+##'
+##' Gets the years for which LSOA data are available
+##'
+##' @return a numeric vector of valid years
+##' @import XML RCurl
+##' @export
+get_lsoa_years <- function() {
+
+    url <- "https://www.gov.uk/government/collections/mlsoa-and-llsoa-electricity-and-gas-estimates"
+    download.file(url, destfile=tf <- tempfile(fileext=".html"), method="curl")
+    doc <- htmlParse(tf)
+    links <- xpathSApply(doc, "//a[contains(text(), 'LLSOA')]/text()")
+    links <- unlist(lapply(links, xmlValue))
+    years <- suppressWarnings(as.numeric(gsub(".*([0-9]{4}) \\(experimental\\)$", "\\1", links)))
+    years <- years[!is.na(years)]
+    return(sort(years))
+}
+
+##' Gets the 2011 population estimates for all LSOAs
+##'
+##' This function gets the socio-demographic data associated with each Lower Super Output Area (LSOA). These data only cover England and Wales.
+##'
+##' @param dir an (optional) directory in which to save the downloaded data
+##' @source \url{https://www.gov.uk/government/statistical-data-sets/socio-economic-data-for-mlsoa-igz-and-llsoa-electricity-and-gas-estimates}
+##' @export
+##' @return a data frame with the LSOA_code, population, area (in hectares), and number of households
 get_LSOA_population <- function(dir) {
 
   ## Download the file
