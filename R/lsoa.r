@@ -70,18 +70,9 @@ get_LSOA_data <- function(id, year=max(get_LSOA_years()), fuel=c("electricity", 
 ##' Gets the years for which LSOA data are available
 ##'
 ##' @return a numeric vector of valid years
-##' @import XML RCurl
 ##' @export
 get_LSOA_years <- function() {
-
-    url <- "https://www.gov.uk/government/collections/mlsoa-and-llsoa-electricity-and-gas-estimates"
-    download.file(url, destfile=tf <- tempfile(fileext=".html"), method="curl")
-    doc <- htmlParse(tf)
-    links <- xpathSApply(doc, "//a[contains(text(), 'LLSOA')]/text()")
-    links <- unlist(lapply(links, xmlValue))
-    years <- suppressWarnings(as.numeric(gsub(".*([0-9]{4}) \\(experimental\\)$", "\\1", links)))
-    years <- years[!is.na(years)]
-    return(sort(years))
+    get_SOA_years("LSOA")
 }
 
 ##' Parses raw LSOA data

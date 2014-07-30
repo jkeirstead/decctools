@@ -25,12 +25,12 @@
 ##' msoa_data <- get_MSOA_data() # Gets all data
 ##' }
 ##' 
-get_MSOA_data <- function(id, year=max(get_msoa_years()), sector=c("domestic", "nondomestic"), fuel=c("electricity", "gas"), dir) {
+get_MSOA_data <- function(id, year=max(get_MSOA_years()), sector=c("domestic", "nondomestic"), fuel=c("electricity", "gas"), dir) {
 
     ## Check for valid years
-    valid <- get_msoa_years()
+    valid <- get_MSOA_years()
     if (length(setdiff(year, valid))>0) {
-        warning("Invalid years detected.  Using available values; see get_msoa_years()")
+        warning("Invalid years detected.  Using available values; see get_MSOA_years()")
         year <- intersect(year, valid)
         if(length(year)==0) year <- max(valid)
     }
@@ -68,18 +68,9 @@ get_MSOA_data <- function(id, year=max(get_msoa_years()), sector=c("domestic", "
 ##' Gets the years for which MSOA data are available
 ##'
 ##' @return a numeric vector of valid years
-##' @import XML RCurl
 ##' @export
-get_msoa_years <- function() {
-
-    url <- "https://www.gov.uk/government/collections/mlsoa-and-llsoa-electricity-and-gas-estimates"
-    download.file(url, destfile=tf <- tempfile(fileext=".html"), method="curl")
-    doc <- htmlParse(tf)
-    links <- xpathSApply(doc, "//a[contains(text(), 'MLSOA')]/text()")
-    links <- unlist(lapply(links, xmlValue))
-    years <- suppressWarnings(as.numeric(gsub(".*([0-9]{4})$", "\\1", links)))
-    years <- years[!is.na(years)]
-    return(sort(years))
+get_MSOA_years <- function() {
+    get_SOA_years("MSOA")
 }
     
 ##' Parses raw MSOA data
