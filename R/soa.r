@@ -9,15 +9,7 @@
 get_SOA_years <- function(level="LSOA") {
 
     ## Validate the input
-    valid <- c("LSOA", "MSOA")
-    level <- intersect(unique(level), valid)
-    if (length(level)>1) {
-        warning("Only one level at a time please; using LSOA.")
-        level <- "LSOA"
-    } else if (length(level)==0) {
-        warning("No valid levels specified, defaulting to LSOA.")
-        level <- "LSOA"
-    }
+    level <- validate_SOA_level(level)
 
     ## Use a flag for the rest of this
     lower <- (level=="LSOA")
@@ -38,4 +30,84 @@ get_SOA_years <- function(level="LSOA") {
     ## Return the result
     return(sort(years))
 }
+
+##' Validates a SOA level
+##'
+##' Only one entry is allowed, either LSOA or MSOA
+##'
+##' @param level the raw level input
+##' @return a single valid level value
+validate_SOA_level <- function(level) {
+    valid <- c("LSOA", "MSOA")
+    level <- intersect(unique(level), valid)
+    if (length(level)>1) {
+        warning("Only one level at a time please; using LSOA.")
+        level <- "LSOA"
+    } else if (length(level)==0) {
+        warning("No valid levels specified, defaulting to LSOA.")
+        level <- "LSOA"
+    }
+
+    return(level)
+}
+
+##' Gets metadata for Super Output Areas
+##'
+##' Gets the socio-demographic data associated with each Super Output
+##' Area.
+##'
+##' @param level one of "LSOA" (default) or "MSOA" specifying the
+##' output area level
+##' @param dir an (optional) directory in which to save the downloaded
+##' data
+##' @source
+##' \url{https://www.gov.uk/government/statistical-data-sets/socio-economic-data-for-mlsoa-igz-and-llsoa-electricity-and-gas-estimates}
+##' @return a data frame with the SOA id code, population, area (in
+##' hectares), and number of households
+##' @import XLConnect
+get_SOA_metadata <- function(level, dir) {
+
+    ## Validate the input
+    level <- validate_SOA_level(level)
+    
+    ## Download the file
+    url <- "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/175644/Socio-economic_data_2013.xls"
+    file_name <- get_remote_file(url, dir)
+
+    ## Now open up the file and read the data
+    ## Note that it is in two parts: English MLSOAs and Scottish IGZs
+    wb <- tryCatch({
+        loadWorkbook(file_name)
+    }, error=function(e) {
+        message(e)
+        return(NULL)
+    })
+
+    ## If a valid workbook isn't found, return an empty data frame
+    if (is.null(wb)) return(data.frame())
+
+    if (level=="MSOA") {
+        england_data <- readWorksheet(wb, "MLSOA England and Wales", startRow=2, startCol=1)
+        scotland_data <- readWorksheet(wb, "IGZ Scotland", startRow=2, startCol=1)
+        pop_data <- list(england_data, scotland_data)
+    } else {
+        pop_data <- readWorksheet(wb, "LLSOA England and Wales", startRow=2, startCol=3)
+        pop_data <- list(pop_data)
+    }
+    rm(wb)
+    
+    ## Tidy up all of the files
+    pop_data <- lapply(pop_data, function(l) {
+        names(l) <- c(level, "name", "population", "area", "households")
+        empty_rows <- which(is.na(l$population))
+        if (length(empty_rows)>0) l <- l[-empty_rows,]
+        return(l[,-2])
+    })
+    pop_data <- do.call("rbind", pop_data)
+    
+    ## Return the result
+    return(pop_data)
+}
+  
+
     

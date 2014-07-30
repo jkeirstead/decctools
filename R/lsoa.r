@@ -166,51 +166,19 @@ get_master_LSOA_params_list <- function(dir) {
     return(df.l)
 }
 
-##' Gets the 2011 population estimates for all LSOAs
+##' Gets metadata for all LSOAs
 ##'
-##' This function gets the socio-demographic data associated with each
-##' Lower Super Output Area (LSOA). These data only cover England and
-##' Wales.
+##' Gets the socio-demographic data associated with each Lower Super
+##' Output Area (LSOA). These data only cover England and Wales.
 ##'
 ##' @param dir an (optional) directory in which to save the downloaded
 ##' data
 ##' @source
 ##' \url{https://www.gov.uk/government/statistical-data-sets/socio-economic-data-for-mlsoa-igz-and-llsoa-electricity-and-gas-estimates}
 ##' @export
-##' @return a data frame with the LSOA_code, population, area (in
+##' @return a data frame with the LSOA id code, population, area (in
 ##' hectares), and number of households
-get_LSOA_population <- function(dir) {
-
-    ## Download the file
-    url <- "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/175644/Socio-economic_data_2013.xls"
-    file_name <- get_remote_file(url, dir)
-
-    ## Now open up the file and read the data
-    ## Note that it is in two parts: English MLSOAs and Scottish IGZs
-    wb <- tryCatch({
-        loadWorkbook(file_name)
-    }, error=function(e) {
-        message(sprintf("Error loading workbook:\n\n%s\nTried download file from %s.  Email package maintainer to see if URL has changed.  Returning an empty data frame.", e, url))
-        return(NULL)
-    })
-
-    ## If a valid workbook isn't found, return an empty data frame
-    if (is.null(wb)) return(data.frame())
-  
-    pop_data <- readWorksheet(wb, "LLSOA England and Wales", startRow=2, startCol=3)
-    rm(wb)
-
-    ## Tidy up both files
-    tidy_pop_data <- function(l) {
-        names(l) <- c("LSOA_code", "name", "population", "area", "households")
-        empty_rows <- which(is.na(l$population))
-        if (length(empty_rows)>0) l <- l[-empty_rows,]
-        return(l[,-2])
-    }
-    
-    pop_data <- tidy_pop_data(pop_data)
-  
-    ## Return the result
-    return(pop_data)
+get_LSOA_metadata <- function(dir) {
+    get_SOA_metadata("LSOA", dir)
 }
   

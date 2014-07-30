@@ -180,52 +180,20 @@ get_master_MSOA_params_list <- function(dir) {
     return(df.l)
 }
 
-#' Gets the 2011 population estimates for all MSOAs (including Scottish IGZs)
+#' Gets metadata for all MSOAs (including Scottish IGZs)
 #'
-#' This function gets the socio-demographic data associated with each
-#' Middle Super Output Area (MSOA).
+#' Gets the socio-demographic data associated with each Middle Super
+#' Output Area (MSOA).
 #'
 #' @param dir an (optional) directory in which to save the downloaded
 #' data
 #' @source
 #' \url{https://www.gov.uk/government/statistical-data-sets/socio-economic-data-for-mlsoa-igz-and-llsoa-electricity-and-gas-estimates}
 #' @export
-#' @return a data frame with the MSOA_code, population, area (in
+#' @return a data frame with the MSOA id code, population, area (in
 #' hectares), and number of households
-get_MSOA_population <- function(dir) {
-
-    ## Download the file
-    url <- "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/175644/Socio-economic_data_2013.xls"
-    file_name <- get_remote_file(url, dir)
-
-    ## Now open up the file and read the data
-    ## Note that it is in two parts: English MLSOAs and Scottish IGZs
-    wb <- tryCatch({
-        loadWorkbook(file_name)
-    }, error=function(e) {
-        message(sprintf("Error loading workbook:\n\n%s\nTried download file from %s.  Email package maintainer to see if URL has changed.  Returning an empty data frame.", e, url))
-        return(NULL)
-    })
-
-    ## If a valid workbook isn't found, return an empty data frame
-    if (is.null(wb)) return(data.frame())
-    
-    england_data <- readWorksheet(wb, "MLSOA England and Wales", startRow=2, startCol=1)
-    scotland_data <- readWorksheet(wb, "IGZ Scotland", startRow=2, startCol=1)
-    pop_data <- list(england_data, scotland_data)
-    rm(wb)
-    
-    ## Tidy up both files
-    pop_data <- lapply(pop_data, function(l) {
-        names(l) <- c("MSOA_code", "name", "population", "area", "households")
-        empty_rows <- which(is.na(l$population))
-        if (length(empty_rows)>0) l <- l[-empty_rows,]
-        return(l[,-2])
-    })
-    pop_data <- do.call("rbind", pop_data)
-    
-    ## Return the result
-    return(pop_data)
+get_MSOA_metadata <- function(dir) {
+    get_SOA_metadata("MSOA", dir)
 }
   
 
