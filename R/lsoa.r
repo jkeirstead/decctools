@@ -38,7 +38,7 @@ get_LSOA_data <- function(id, year=max(get_LSOA_years()), fuel=c("electricity", 
     sector <- "domestic"
 
     ## Fetch the master parameters list
-    params <- get_master_LSOA_params_list()
+    params <- get_params_list("LSOA")
     dir <- validate_directory(dir)
     params <- lapply(params, function(l) c(l, list(dir=dir)))
 
@@ -74,26 +74,6 @@ get_LSOA_data <- function(id, year=max(get_LSOA_years()), fuel=c("electricity", 
 ##' @export
 get_LSOA_years <- function() {
     get_SOA_years("LSOA")
-}
-
-##' Builds a master set of parameters for LSOA data
-##'
-##' Creates a list of various parameters needed to download and
-##' extract LSOA data from the DECC website.
-##'
-##' @return a list containing the parameters necessary to read each
-##' LSOA data file
-get_master_LSOA_params_list <- function() {
-
-    ## Build a list summarizing everything
-    data(lsoa_params, envir=environment())
-
-    ## Fix automatic factorisation of the text file
-    factor_cols <- sapply(lsoa_params, is.factor)
-    lsoa_params[factor_cols] <- lapply(lsoa_params[factor_cols], as.character)
-    
-    df.l <- dlply(lsoa_params, c("year", "sector", "fuel"), as.list, stringsAsFactors=FALSE)  
-    return(df.l)
 }
 
 ##' Gets metadata for all LSOAs

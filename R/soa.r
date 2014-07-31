@@ -125,7 +125,8 @@ get_SOA_metadata <- function(level, dir) {
 ## url, dir, sheet_name, custom_function, sector, fuel, and year
 ##' @return a data frame with the energy data.  NULL if not all of the
 ##' required parameters are specified
-##' @import XLConnect plyr
+##' @import XLConnect
+##' @importFrom plyr mutate
 parse_raw_SOA_data <- function(level, params) {
 
     ## Validate the inputs
@@ -171,4 +172,34 @@ parse_raw_SOA_data <- function(level, params) {
     data <- data[!is.na(data[level]), ]
 
     return(data)
+}
+
+##' Builds a master set of parameters for SOA data
+##'
+##' Creates a list of various parameters needed to download and
+##' extract SOA data from the DECC website.
+##'
+##' @param level one of "LSOA" or "MSOA" specifying the output area
+##' level
+##' @return a list containing the parameters necessary to read each
+##' LSOA data file
+get_params_list <- function(level) {
+
+    ## Validate the inputs
+    level <- validate_SOA_level(level)
+
+    ## Build a data.frame summarizing everything
+    data(params, envir=environment())
+    
+    ## Fix automatic factorisation of the text file
+    factor_cols <- sapply(params, is.factor)
+    params[factor_cols] <- lapply(params[factor_cols], as.character)
+    
+    ## Subset for the right level and remove key column
+    params <- params[which(params$level==level), ]
+    params <- params[, -1]
+
+    df.l <- dlply(params, c("year", "sector", "fuel"), as.list)
+  
+    return(df.l)
 }

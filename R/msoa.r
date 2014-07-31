@@ -38,7 +38,7 @@ get_MSOA_data <- function(id, year=max(get_MSOA_years()), sector=c("domestic", "
     ## Because the format of each spreadsheet is slightly different we
     ## have to do some ugly hacking in the parse_raw_MSOA_data function
     ## below
-    params <- get_master_MSOA_params_list()
+    params <- get_params_list("MSOA")
     dir <- validate_directory(dir)
     params <- lapply(params, function(l) c(l, list(dir=dir)))
 
@@ -75,28 +75,6 @@ get_MSOA_years <- function() {
     get_SOA_years("MSOA")
 }
     
-##' Builds a master set of parameters for MSOA data
-##'
-##' Creates a list of various parameters needed to download and
-##' extract MSOA data from the DECC website.
-##'
-##' @return a list containing the parameters necessary to read each
-##' LSOA data file
-
-get_master_MSOA_params_list <- function() {
-    
-    ## Build a data.frame summarizing everything
-    data(msoa_params, envir=environment())
-
-    ## Fix automatic factorisation of the text file
-    factor_cols <- sapply(msoa_params, is.factor)
-    msoa_params[factor_cols] <- lapply(msoa_params[factor_cols], as.character)
-
-    df.l <- dlply(msoa_params, c("year", "sector", "fuel"), as.list)
-  
-    return(df.l)
-}
-
 #' Gets metadata for all MSOAs (including Scottish IGZs)
 #'
 #' Gets the socio-demographic data associated with each Middle Super
