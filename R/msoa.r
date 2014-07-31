@@ -38,8 +38,10 @@ get_MSOA_data <- function(id, year=max(get_MSOA_years()), sector=c("domestic", "
     ## Because the format of each spreadsheet is slightly different we
     ## have to do some ugly hacking in the parse_raw_MSOA_data function
     ## below
-    params <- get_master_MSOA_params_list(dir)
-  
+    params <- get_master_MSOA_params_list()
+    dir <- validate_directory(dir)
+    params <- lapply(params, function(l) c(l, list(dir=dir)))
+
     ## Subset this to only those sectors that we care about
     cond <- lapply(params, function(l) return(l$year %in% year & l$sector %in% sector & l$fuel %in% fuel))
     params <- params[unlist(cond)]
@@ -78,8 +80,7 @@ get_MSOA_years <- function() {
 #' Creates a list of various parameters needed to download and extract
 #' MSOA data from the DECC website.
 #'
-#' @param dir the directory to use for saving the data
-get_master_MSOA_params_list <- function(dir) {
+get_master_MSOA_params_list <- function() {
 
     ## First specify the urls
     urls <- c("https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/296230/MSOA_non-domestic_electricity_estimates__2012_.xlsx",
@@ -118,11 +119,9 @@ get_master_MSOA_params_list <- function(dir) {
     null_function <- function(df) return(df[,4])
     dom_elec_function <- function(df) return(apply(df[,4:5],1,sum,na.rm=TRUE))
     
-    dir <- validate_directory(dir)
-  
     ## Build a data.frame summarizing everything
     df <- data.frame(url=urls, sheet_name=worksheet_names, year=years,
-                       sector=sectors, fuel=fuels, dir=dir, stringsAsFactors=FALSE)
+                       sector=sectors, fuel=fuels, stringsAsFactors=FALSE)
     df.l <- dlply(df, c("year", "sector", "fuel"), as.list)
   
     ## Add the custom function to this list.  For most sheets it's simply retrieving
