@@ -76,38 +76,23 @@ get_LSOA_years <- function() {
     get_SOA_years("LSOA")
 }
 
-##' Builds a master set of parameters for MSOA data
+##' Builds a master set of parameters for LSOA data
 ##'
 ##' Creates a list of various parameters needed to download and
-##' extract MSOA data from the DECC website.
+##' extract LSOA data from the DECC website.
 ##'
+##' @return a list containing the parameters necessary to read each
+##' LSOA data file
 get_master_LSOA_params_list <- function() {
 
-  ## First specify the urls
-    urls <- c("https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/49432/4813-llsoa-domestic-elec-est-2010.xls",
-              "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/49433/4814-llsoa-domestic-gas-est-2010.xls",
-              "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/303117/LSOA_domestic_electricity_estimates__2011_.xlsx",
-              "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/303118/LSOA_domestic_gas__2011_.xlsx",
-              "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/296257/LSOA_domestic_electricity_estimates__2012_.xlsx",
-              "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/317540/LSOA_domestic_gas__2012_.xlsx")
-
-    ## And the corresponding worksheet names are
-    worksheet_names <- c("LLSOA Electricity Domestic", "LLSOA Domestic gas",
-                       "LSOA domestic electricity 2011", "2011 LSOA Domestic Gas",
-                       "LSOA domestic electricity 2012", "LSOA domestic gas")
-
-    ## Define the sectors that these cover
-    sectors <- rep("domestic", 6)
-    fuels <- rep(c("electricity", "gas"), 3)
-    years <- rep(2010:2012, each=2)
-    cols <- rep(c("5,6","5"), 3)
-    rows <- c(rep(3, 5), 2)
-
     ## Build a list summarizing everything
-    df <- data.frame(url=urls, sheet_name=worksheet_names, sector=sectors, fuel=fuels,
-                     year=years, cols=cols, start_row=rows, stringsAsFactors=FALSE)
-    df.l <- dlply(df, c("year", "sector", "fuel"), as.list)
-  
+    data(lsoa_params, envir=environment())
+
+    ## Fix automatic factorisation of the text file
+    factor_cols <- sapply(lsoa_params, is.factor)
+    lsoa_params[factor_cols] <- lapply(lsoa_params[factor_cols], as.character)
+    
+    df.l <- dlply(lsoa_params, c("year", "sector", "fuel"), as.list, stringsAsFactors=FALSE)  
     return(df.l)
 }
 
