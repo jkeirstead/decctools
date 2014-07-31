@@ -1,3 +1,70 @@
+##' Get SOA energy consumption data
+##'
+##' Gets SOA (Super Output Area) energy consumption data from the DECC
+##' website.  You can select which SOA level, sector, year, and fuel
+##' type to fetch, as well as specifying a directory for local
+##' caching.
+##'
+##' @param level either "LSOA" or "MSOA"
+##' @param id the unique id of the SOA to fetch.  If not specified,
+##' then all SOAs are retrieved.
+##' @param year the year for which you want data.  Defaults to the
+##' most recent year available.
+##' @param sector the economic sector to fetch.  Valid values are
+##' 'domestic', 'nondomestic'
+##' @param fuel the fuel type to fetch.  Valid values are
+##' 'electricity', 'gas'
+##' @param dir an optional directory in which to save a copy of the
+##' data
+##' @return a long data frame with the requested data.  The 'energy'
+##' column is measured in GWh.
+##' @keywords data energy
+##' 
+get_SOA_data <- function(level, id, year=max(get_SOA_years()), sector=c("domestic", "nondomestic"), fuel=c("electricity", "gas"), dir) {
+
+    ## Check for valid years
+    valid <- get_SOA_years(level)
+    if (length(setdiff(year, valid))>0) {
+        warning("Invalid years detected.  Using available values; see get_SOA_years()")
+        year <- intersect(year, valid)
+        if(length(year)==0) year <- max(valid)
+    }
+
+    ## At the moment, DECC only provides these statistics for the
+    ## domestic sector
+    if (level=="LSOA") sector <- "domestic"
+    
+    ## Because the format of each spreadsheet is slightly different we
+    ## have to do some ugly hacking in the parse_raw_SOA_data function
+    ## below
+    params <- get_params_list(level)
+    dir <- validate_directory(dir)
+    params <- lapply(params, function(l) c(l, list(dir=dir)))
+
+    ## Subset this to only those sectors that we care about
+    cond <- lapply(params, function(l) return(l$year %in% year & l$sector %in% sector & l$fuel %in% fuel))
+    params <- params[unlist(cond)]
+  
+    ## Now actually go and get the data
+    tmp <- llply(params, function(l) parse_raw_SOA_data(level, l))    
+    all_data <- do.call("rbind", tmp)
+    
+    ## Remove the unallocated SOAs
+    all_data <- all_data[all_data[level]!="Unallocated", ]
+
+    ## Subset on the target ids
+    if (!missing(id)) {
+        if (!is.na(id)) {
+            all_data <- all_data[which(all_data[level] %in% id),]
+        }
+    }
+    
+    ## Renumber rows and return the result
+    row.names(all_data) <- 1:nrow(all_data)
+    return(all_data)
+}
+
+
 ##' Gets the years for which SOA data are available
 ##'
 ##' Gets the years for which SOA data are available

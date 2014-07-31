@@ -21,49 +21,7 @@
 ##' lsoa_data <- get_LSOA_data() # Gets all data
 ##' }
 get_LSOA_data <- function(id, year=max(get_LSOA_years()), fuel=c("electricity", "gas"), dir) {
-
-    ## As with the MSOA stuff, we'll prepare a list of all the
-    ## parameters and then process them one by one.
-    
-    ## Check for valid years
-    valid <- get_LSOA_years()
-    if (length(setdiff(year, valid))>0) {
-        warning("Invalid years detected.  Using available values; see get_lsoa_years()")
-        year <- intersect(year, valid)
-        if(length(year)==0) year <- max(valid)
-    }
-    
-    ## At the moment, DECC only provides these statistics for the
-    ## domestic sector
-    sector <- "domestic"
-
-    ## Fetch the master parameters list
-    params <- get_params_list("LSOA")
-    dir <- validate_directory(dir)
-    params <- lapply(params, function(l) c(l, list(dir=dir)))
-
-    ## Subset to only those ones we care about
-    cond <- lapply(params, function(l) return(l$year %in% year & l$sector %in% sector & l$fuel %in% fuel))
-    params <- params[unlist(cond)]
-
-    ## Now actually go and get the data
-    tmp <- llply(params, function(l) parse_raw_SOA_data("LSOA", l))
-    all_data <- do.call("rbind", tmp)
-
-    ## Remove the unallocated LSOAs
-    all_data <- all_data[all_data$LSOA!="Unallocated", ]
-
-    ## Subset on the target ids
-    if (!missing(id)) {
-        if (!is.na(id))  {
-            all_data <- all_data[which(all_data$LSOA %in% id),]
-        }
-    }
-
-    ## Renumber rows and return the result
-    row.names(all_data) <- 1:nrow(all_data)
-    return(all_data)
-    
+    return(get_SOA_data("LSOA", id, year, "domestic", fuel, dir))
 }
 
 ##' Gets the years for which LSOA data are available
