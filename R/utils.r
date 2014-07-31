@@ -162,7 +162,8 @@ get_lookup_table <- function(urban_classes=c("LU", "MU"), dir) {
                            "Vale of Glamorgan, The", "The Vale of Glamorgan"))
 
   ## Now load in the urban classification.  All the detailed
-  ## processing for this is in the benchmarking paper. 
+  ## processing for this is in the benchmarking paper.
+  data(LAD_metadata, envir=environment())
   meta <- mutate(LAD_metadata, urban=(LAD_metadata$urban_class %in% urban_classes))
   meta <- meta[,c("name", "short_code", "long_code", "urban", "country")]
 

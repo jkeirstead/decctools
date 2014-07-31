@@ -108,12 +108,14 @@ get_grid_mix <- function(start, end) {
 #' }
 #' @export
 #' @import reshape2 plyr
+#' @importFrom plyr mutate ddply
 get_grid_carbon <- function(start, end) {
 
   ## Get the grid mix data for this period
   data <- get_grid_mix(start, end)
 
   ## Merge with carbon intensities data for each fuel type
+  data(carbon_intensities, envir=environment())
   data.m <- melt(data, id="datetime")
   data.m <- merge(data.m, carbon_intensities, by.x="variable", by.y="fuel")
 

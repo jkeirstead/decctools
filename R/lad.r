@@ -205,8 +205,9 @@ clean_decc_data <- function(df) {
 ##' @return a data frame with the LAU1_code and population
 get_LAD_population <- function() {
 
-  ## This is now stored in the embedded file so it's a quick job.
-  return(LAD_metadata[,c("LAU1_code", "population")])
+    ## This is now stored in the embedded file so it's a quick job.
+    data(LAD_metadata, envir=environment())
+    return(LAD_metadata[,c("LAU1_code", "population")])
 
 }
   

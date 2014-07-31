@@ -21,4 +21,4 @@ Imports:
     RCurl,
     lubridate,
     plyr
-LazyData: true
+LazyData: false
