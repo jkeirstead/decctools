@@ -39,7 +39,9 @@ get_LSOA_data <- function(id, year=max(get_LSOA_years()), fuel=c("electricity", 
     sector <- "domestic"
 
     ## Fetch the master parameters list
-    params <- get_master_LSOA_params_list(dir)
+    params <- get_master_LSOA_params_list()
+    dir <- validate_directory(dir)
+    params <- lapply(params, function(l) c(l, list(dir=dir)))
 
     ## Subset to only those ones we care about
     cond <- lapply(params, function(l) return(l$year %in% year & l$sector %in% sector & l$fuel %in% fuel))
@@ -80,8 +82,7 @@ get_LSOA_years <- function() {
 ##' Creates a list of various parameters needed to download and
 ##' extract MSOA data from the DECC website.
 ##'
-##' @param dir the directory in which to store a copy of the data
-get_master_LSOA_params_list <- function(dir) {
+get_master_LSOA_params_list <- function() {
 
   ## First specify the urls
     urls <- c("https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/49432/4813-llsoa-domestic-elec-est-2010.xls",
@@ -106,11 +107,9 @@ get_master_LSOA_params_list <- function(dir) {
     dom_gas_function <- function(df) return(df[,5])
     dom_elec_function <- function(df) return(apply(df[,5:6],1,sum,na.rm=TRUE))
 
-    dir <- validate_directory(dir)
-  
     ## Build a list summarizing everything
     df <- data.frame(url=urls, sheet_name=worksheet_names, sector=sectors, fuel=fuels,
-                     year=years, dir=dir, stringsAsFactors=FALSE)
+                     year=years, stringsAsFactors=FALSE)
     df.l <- dlply(df, c("year", "sector", "fuel"), as.list)
   
     ## Add the custom functions to to the list
