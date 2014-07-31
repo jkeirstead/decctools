@@ -19,7 +19,7 @@
 ##' column is measured in GWh.
 ##' @keywords data energy
 ##' @export
-##' @import plyr
+##' @importFrom plyr llply
 ##' @examples
 ##' \dontrun{
 ##' msoa_data <- get_MSOA_data() # Gets all data
@@ -75,50 +75,24 @@ get_MSOA_years <- function() {
     get_SOA_years("MSOA")
 }
     
-#' Builds a master set of parameters for MSOA data
-#'
-#' Creates a list of various parameters needed to download and extract
-#' MSOA data from the DECC website.
-#'
-get_master_MSOA_params_list <- function() {
+##' Builds a master set of parameters for MSOA data
+##'
+##' Creates a list of various parameters needed to download and
+##' extract MSOA data from the DECC website.
+##'
+##' @return a list containing the parameters necessary to read each
+##' LSOA data file
 
-    ## First specify the urls
-    urls <- c("https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/296230/MSOA_non-domestic_electricity_estimates__2012_.xlsx",
-              "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/296237/MSOA_non_-_domestic_gas_estimates__2012_.xlsx",
-              "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/296234/MSOA_domestic_electricity_estimates__2012_.xlsx",
-              "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/296241/MSOA_domestic_gas_estimates__2012_.xlsx",
-              "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/303114/MSOA_non-domestic_electricity_estimates__2011_.xlsx",
-              "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/303113/MSOA_non-domestic_gas_estimates__2011_.xlsx",
-              "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/303110/MSOA_domestic_electricity_estimates__2011_.xlsx",
-              "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/303112/MSOA_domestic_gas_estimates__2011_.xlsx",
-              "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/49425/4830-mlsoa-non-dom-elec-2010-alldata.xls",
-              "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/49427/4831-mlsoa-non-dom-gas-2010-alldata.xls",
-              "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/49424/4828-mlsoa-dom-elec-2010-alldata.xls",
-              "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/49426/4842-mlsoa-dom-gas-2010-all-data.xls")
-             
-    ## And the corresponding worksheet names are
-    worksheet_names <- c("MSOA non-domestic elec 2012",
-                         "MSOA non-domestic gas",
-                         "MSOA domestic electricity 2012",
-                         "MSOA domestic gas",
-                         "MSOA non-domestic elec 2011",
-                         "MSOA non-domestic gas 2011",
-                         "MSOA domestic electricity 2011",
-                         "MSOA domestic gas (2011)",
-                         "MLSOA Non-domestic Electricity",
-                         "Non-domestic gas MLSOA",
-                         "MLSOA Domestic Electricity",
-                         "MLSOA Domestic Gas")
-    
-    sectors <- rep(c("nondomestic", "domestic"), each=2, 3)
-    fuels <- rep(c("electricity", "gas"), 2*3)
-    years <- rep(2012:2010, each=4)
-    cols <- rep(c("4","4","4,5","4"), 3)
+get_master_MSOA_params_list <- function() {
     
     ## Build a data.frame summarizing everything
-    df <- data.frame(url=urls, sheet_name=worksheet_names, year=years,
-                       sector=sectors, fuel=fuels, cols=cols, start_row=3, stringsAsFactors=FALSE)
-    df.l <- dlply(df, c("year", "sector", "fuel"), as.list)
+    data(msoa_params, envir=environment())
+
+    ## Fix automatic factorisation of the text file
+    factor_cols <- sapply(msoa_params, is.factor)
+    msoa_params[factor_cols] <- lapply(msoa_params[factor_cols], as.character)
+
+    df.l <- dlply(msoa_params, c("year", "sector", "fuel"), as.list)
   
     return(df.l)
 }
