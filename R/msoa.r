@@ -113,27 +113,13 @@ get_master_MSOA_params_list <- function() {
     sectors <- rep(c("nondomestic", "domestic"), each=2, 3)
     fuels <- rep(c("electricity", "gas"), 2*3)
     years <- rep(2012:2010, each=4)
-    
-    ## Then custom functions to retrieve the data since the domestic electricity is split
-    ## These returns the code column first and then the energy value
-    null_function <- function(df) return(df[,4])
-    dom_elec_function <- function(df) return(apply(df[,4:5],1,sum,na.rm=TRUE))
+    cols <- rep(c("4","4","4,5","4"), 3)
     
     ## Build a data.frame summarizing everything
     df <- data.frame(url=urls, sheet_name=worksheet_names, year=years,
-                       sector=sectors, fuel=fuels, stringsAsFactors=FALSE)
+                       sector=sectors, fuel=fuels, cols=cols, start_row=3, stringsAsFactors=FALSE)
     df.l <- dlply(df, c("year", "sector", "fuel"), as.list)
   
-    ## Add the custom function to this list.  For most sheets it's simply retrieving
-    ## the fourth column, but domestic electricity is a bit different.
-    df.l <- lapply(df.l, function(l) {
-        if(l$sector=="domestic" & l$fuel=="electricity") {
-            return(c(l, list(custom_function=dom_elec_function)))
-        } else {
-            return(c(l, list(custom_function=null_function)))
-        }
-    })
-
     return(df.l)
 }
 

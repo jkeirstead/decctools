@@ -32,7 +32,6 @@ get_LSOA_data <- function(id, year=max(get_LSOA_years()), fuel=c("electricity", 
         year <- intersect(year, valid)
         if(length(year)==0) year <- max(valid)
     }
-
     
     ## At the moment, DECC only provides these statistics for the
     ## domestic sector
@@ -101,24 +100,14 @@ get_master_LSOA_params_list <- function() {
     sectors <- rep("domestic", 6)
     fuels <- rep(c("electricity", "gas"), 3)
     years <- rep(2010:2012, each=2)
-  
-    ## Then custom functions to retrieve the data since the domestic electricity is split
-    ## These returns the code column first and then the energy value
-    dom_gas_function <- function(df) return(df[,5])
-    dom_elec_function <- function(df) return(apply(df[,5:6],1,sum,na.rm=TRUE))
+    cols <- rep(c("5,6","5"), 3)
+    rows <- c(rep(3, 5), 2)
 
     ## Build a list summarizing everything
     df <- data.frame(url=urls, sheet_name=worksheet_names, sector=sectors, fuel=fuels,
-                     year=years, stringsAsFactors=FALSE)
+                     year=years, cols=cols, start_row=rows, stringsAsFactors=FALSE)
     df.l <- dlply(df, c("year", "sector", "fuel"), as.list)
   
-    ## Add the custom functions to to the list
-    df.l <- lapply(df.l, function(l) {
-        if (l$fuel=="electricity") {
-            return(c(l, list(custom_function=dom_elec_function)))
-        } else {
-            return(c(l, list(custom_function=dom_gas_function)))
-        }})
     return(df.l)
 }
 

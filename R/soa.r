@@ -130,8 +130,8 @@ parse_raw_SOA_data <- function(level, params) {
 
     ## Validate the inputs
     level <- validate_SOA_level(level)
-    reqd_params <- c("url", "dir", "sheet_name", "custom_function",
-                     "sector", "fuel", "year")
+    reqd_params <- c("url", "dir", "sheet_name", "cols",
+                     "sector", "fuel", "year", "start_row")
     if (!all(reqd_params %in% names(params))) {
         missing_pars <- setdiff(reqd_params, names(params))
         warning(sprintf("Required parameters '%s' are missing: returning NULL",
@@ -152,13 +152,13 @@ parse_raw_SOA_data <- function(level, params) {
 
     ## If a valid workbook isn't found, return an empty data frame
     if (is.null(wb)) return(data.frame())
-    
-    data <- readWorksheet(wb, params$sheet_name, startRow=2)
+
+    data <- readWorksheet(wb, params$sheet_name, startRow=params$start_row, header=FALSE)
     rm(wb)
     
     ## Perform any custom changes to the data set
     soa <- data[,ifelse(level=="LSOA", 4, 3)]
-    energy <- params$custom_function(data)
+    energy <- apply(data[,eval(parse(text=sprintf("c(%s)", params$cols))), drop=FALSE], 1, sum, na.rm=TRUE)
     
     ## Set the names
     data <- data.frame(soa, energy, s=params$sector, f=params$fuel, y=params$year, row.names=1:length(soa))
