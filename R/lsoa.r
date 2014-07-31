@@ -46,16 +46,16 @@ get_LSOA_data <- function(id, year=max(get_LSOA_years()), fuel=c("electricity", 
     params <- params[unlist(cond)]
 
     ## Now actually go and get the data
-    tmp <- llply(params, parse_raw_LSOA_data)
+    tmp <- llply(params, function(l) parse_raw_SOA_data("LSOA", l))
     all_data <- do.call("rbind", tmp)
 
     ## Remove the unallocated LSOAs
-    all_data <- all_data[all_data$LSOA_code!="Unallocated", ]
+    all_data <- all_data[all_data$LSOA!="Unallocated", ]
 
     ## Subset on the target ids
     if (!missing(id)) {
         if (!is.na(id))  {
-            all_data <- all_data[which(all_data$LSOA_code %in% id),]
+            all_data <- all_data[which(all_data$LSOA %in% id),]
         }
     }
 
@@ -73,49 +73,6 @@ get_LSOA_data <- function(id, year=max(get_LSOA_years()), fuel=c("electricity", 
 ##' @export
 get_LSOA_years <- function() {
     get_SOA_years("LSOA")
-}
-
-##' Parses raw LSOA data
-##'
-##' Parses the raw LSOA data for a set of given parameters
-##'
-##' @param l list giving the function parameters including url, ws,
-##' start_row, start_col, end_row, end_col, custom_function, data_col
-##' @import plyr
-parse_raw_LSOA_data <- function(l) {
-
-    ## Get the file name (and download if necessary)
-    file_name <- get_remote_file(l$url, l$dir)
-  
-    ## Load it into memory
-    wb <- tryCatch({
-        loadWorkbook(file_name)
-    }, error=function(e) {
-        message(sprintf("Error loading workbook:\n\n%s\nTried download file from %s.  Email package maintainer to see if URL has changed.  Returning an empty data frame.", e, l$url))
-        return(NULL)
-    })
-
-    ## If a valid workbook isn't found, return an empty data frame
-    if (is.null(wb)) return(data.frame())
-  
-    data <- readWorksheet(wb, l$sheet_name, startRow=2)
-    rm(wb)
-  
-    ## Perform any custom changes to the data set
-    lsoa <- data[,4]
-    energy <- l$custom_function(data)
-  
-    ## Assemble the final data frame
-    data <- data.frame(lsoa, energy, s=l$sector, f=l$fuel, y=l$year, row.names=1:length(lsoa))
-    names(data) <- c("LSOA_code", "energy", "sector", "fuel", "year")
-
-    ## Convert kWh to GWh
-    data <- mutate(data, energy=energy/1e6)
-  
-    ## Remove empty rows
-    data <- data[!is.na(data$LSOA_code), ]
-
-    return(data)
 }
 
 ##' Builds a master set of parameters for MSOA data

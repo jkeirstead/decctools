@@ -35,7 +35,7 @@ get_SOA_years <- function(level="LSOA") {
 ##'
 ##' Only one entry is allowed, either LSOA or MSOA
 ##'
-##' @param level the raw level input
+##' @param level a character vector of unprocessed SOA level values
 ##' @return a single valid level value
 validate_SOA_level <- function(level) {
     valid <- c("LSOA", "MSOA")
@@ -111,3 +111,64 @@ get_SOA_metadata <- function(level, dir) {
   
 
     
+##' Parses raw SOA data
+##' 
+##' Parses the raw SOA data for a set of given parameters.  This
+##' function deals with the fact that every DECC spreadsheet has a
+##' slightly different layout, but the extraction is the same.
+##' Namely, open up an Excel spreadsheet, get the right tab, extract
+##' the data from the right columns, tidy, and return.
+##'
+##' @param level one of "LSOA" or "MSOA" specifying the
+##' output area level
+##' @param params a list giving the function parameters including
+## url, dir, sheet_name, custom_function, sector, fuel, and year
+##' @return a data frame with the energy data.  NULL if not all of the
+##' required parameters are specified
+##' @import XLConnect plyr
+parse_raw_SOA_data <- function(level, params) {
+
+    ## Validate the inputs
+    level <- validate_SOA_level(level)
+    reqd_params <- c("url", "dir", "sheet_name", "custom_function",
+                     "sector", "fuel", "year")
+    if (!all(reqd_params %in% names(params))) {
+        missing_pars <- setdiff(reqd_params, names(params))
+        warning(sprintf("Required parameters '%s' are missing: returning NULL",
+                        paste(missing_pars, collapse=", ")))
+        return(NULL)
+    }
+    
+    ## Get the file name (and download if necessary)
+    file_name <- get_remote_file(params$url, params$dir)
+    
+    ## Load it into memory
+    wb <- tryCatch({
+        loadWorkbook(file_name)
+    }, error=function(e) {
+        message(e)
+        return(NULL)
+    })
+
+    ## If a valid workbook isn't found, return an empty data frame
+    if (is.null(wb)) return(data.frame())
+    
+    data <- readWorksheet(wb, params$sheet_name, startRow=2)
+    rm(wb)
+    
+    ## Perform any custom changes to the data set
+    soa <- data[,ifelse(level=="LSOA", 4, 3)]
+    energy <- params$custom_function(data)
+    
+    ## Set the names
+    data <- data.frame(soa, energy, s=params$sector, f=params$fuel, y=params$year, row.names=1:length(soa))
+    names(data) <- c(level, "energy", "sector", "fuel", "year")
+
+    ## Convert kWh to GWh
+    data <- mutate(data, energy=energy/1e6)
+    
+    ## Remove empty rows and return
+    data <- data[!is.na(data[level]), ]
+
+    return(data)
+}

@@ -45,16 +45,16 @@ get_MSOA_data <- function(id, year=max(get_MSOA_years()), sector=c("domestic", "
     params <- params[unlist(cond)]
   
     ## Now actually go and get the data
-    tmp <- llply(params, parse_raw_MSOA_data)
+    tmp <- llply(params, function(l) parse_raw_SOA_data("MSOA", l))
     all_data <- do.call("rbind", tmp)
     
     ## Remove the unallocated MSOAs
-    all_data <- all_data[all_data$MSOA_code!="Unallocated", ]
+    all_data <- all_data[all_data$MSOA!="Unallocated", ]
 
     ## Subset on the target ids
     if (!missing(id)) {
         if (!is.na(id)) {
-            all_data <- all_data[which(all_data$MSOA_code %in% id),]
+            all_data <- all_data[which(all_data$MSOA %in% id),]
         }
     }
     
@@ -73,48 +73,6 @@ get_MSOA_years <- function() {
     get_SOA_years("MSOA")
 }
     
-##' Parses raw MSOA data
-##' 
-##' Parses the raw MSOA data for a set of given parameters.  
-##'
-##' @param l list giving the function parameters including
-## url, ws, start_row, start_col, end_row, end_col, custom_function, data_col
-parse_raw_MSOA_data <- function(l) {
-  
-    ## Get the file name (and download if necessary)
-    file_name <- get_remote_file(l$url, l$dir)
-    
-    ## Load it into memory
-    wb <- tryCatch({
-        loadWorkbook(file_name)
-    }, error=function(e) {
-        message(sprintf("Error loading workbook:\n\n%s\nTried download file from %s.  Email package maintainer to see if URL has changed.  Returning an empty data frame.", e, l$url))
-        return(NULL)
-    })
-
-    ## If a valid workbook isn't found, return an empty data frame
-    if (is.null(wb)) return(data.frame())
-    
-    data <- readWorksheet(wb, l$sheet_name, startRow=2)
-    rm(wb)
-    
-    ## Perform any custom changes to the data set
-    msoa <- data[,3]
-    energy <- l$custom_function(data)
-    
-    ## Set the names
-    data <- data.frame(msoa, energy, s=l$sector, f=l$fuel, y=l$year, row.names=1:length(msoa))
-    names(data) <- c("MSOA_code", "energy", "sector", "fuel", "year")
-
-    ## Convert kWh to GWh
-    data <- mutate(data, energy=energy/1e6)
-    
-    ## Remove empty rows and return
-    data <- data[!is.na(data$MSOA_code), ]
-
-    return(data)
-}
-
 #' Builds a master set of parameters for MSOA data
 #'
 #' Creates a list of various parameters needed to download and extract
