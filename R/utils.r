@@ -1,15 +1,15 @@
-#' Gets a file from a remote URL
-#' 
-#' Since the URLs of UK government data appear to change quite
-#' frequently, the method will automatically cache a local copy.
-#'
-#' @param url the address of the file to download
-#' @param dir the directory to store the cached file in.  If
-#' undefined, it defaults to $TEMP/decctools.
-#' @param update_cache boolean.  Should the cached file be
-#' overwritten?  Default = FALSE
-#' @return the file name (local path)
-#' @import stringr RCurl
+##' Gets a file from a remote URL
+##' 
+##' Since the URLs of UK government data appear to change quite
+##' frequently, the method will automatically cache a local copy.
+##'
+##' @param url the address of the file to download
+##' @param dir the directory to store the cached file in.  If
+##' undefined, it defaults to $TEMP/decctools.
+##' @param update_cache boolean.  Should the cached file be
+##' overwritten?  Default = FALSE
+##' @return the file name (local path)
+##' @import stringr RCurl
 get_remote_file <- function(url, dir, update_cache=FALSE) {
 
   ## Currently only processes one URL
@@ -51,14 +51,15 @@ get_remote_file <- function(url, dir, update_cache=FALSE) {
   return(file_name)
 }
 
-#' Validates a user-specified directory
-#'
-#' Ensures that a user-specified directory exists.  If the argument is
-#' missing then a placeholder directory is created in $TEMP.
-#' 
-#' @param dir the directory name
-#' @return the validated directory name
+##' Validates a user-specified directory
+##'
+##' Ensures that a user-specified directory exists.  If the argument is
+##' missing then a placeholder directory is created in $TEMP.
+##' 
+##' @param dir the directory name
+##' @return the validated directory name
 validate_directory <- function(dir) {
+    
   ## Define the cache directory
   if (missing(dir)) dir=file.path(tempdir(), get_package_name())
   if (is.na(dir)) dir=file.path(tempdir(), get_package_name())
@@ -69,23 +70,23 @@ validate_directory <- function(dir) {
   return(dir)
 }
 
-#' Gets the name of this package
-#'
-#' @return a character string
+##' Gets the name of this package
+##'
+##' @return a character string
 get_package_name <- function() {
   return ("decctools")
 }  
 
-#' Gets a lookup table to match IDs across geographies
-#'
-#' Provides a lookup table giving the local authority name and
-#' corresponding IDs for LAD, MSOA, and LSOA geographies.
-#'
-#' @note As SOA energy data are not available for Northern Ireland,
-#' this method only returns a lookup for England, Wales, and Scotland.
-#'
-#' @return a data frame
-#' @export
+##' Gets a lookup table to match IDs across geographies
+##'
+##' Provides a lookup table giving the local authority name and
+##' corresponding IDs for LAD, MSOA, and LSOA geographies.
+##'
+##' @note As SOA energy data are not available for Northern Ireland,
+##' this method only returns a lookup for England, Wales, and Scotland.
+##'
+##' @return a data frame
+##' @export
 get_lookup_table <- function() {
 
     ## For England and Wales, this is quite straight forward as ONS
