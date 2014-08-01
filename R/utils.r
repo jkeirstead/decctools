@@ -119,3 +119,70 @@ get_lookup_table <- function() {
     tmp <- rbind(df, scot.df)
     return(tmp)
 }
+
+##' Checks if a specified local authority is urban
+##'
+##' Checks if a local authority is urban according to a user specified
+##' classification.  See the details for more, well, detail.
+##'
+##' @details The urban classifications are described at
+##' \url{http://www.ons.gov.uk/ons/guide-method/geography/products/area-classifications/rural-urban-definition-and-la/rural-urban-local-authority--la--classification--england-/index.html}
+##' and are summarized as follows:
+##'
+##' \itemize{
+##' 
+##' \item MU = Major Urban: districts with either 100,000 people or 50
+##' per cent of their population in urban areas with a population of
+##' more than 750,000
+##' 
+##' \item LU = Large Urban: districts with either 50,000 people or 50
+##' per cent of their population in one of 17 urban areas with a
+##' population between 250,000 and 750,000
+##' 
+##' \item OU = Other Urban: districts with fewer than 37,000 people or
+##' less than 26 per cent of their population in rural settlements and
+##' larger market towns
+##' 
+##' \item SR = Significant Rural: districts with more than 37,000
+##' people or more than 26 per cent of their population in rural
+##' settlements and larger market towns
+##' 
+##' \item R50 = Rural-50: districts with at least 50 per cent but less
+##' than 80 per cent of their population in rural settlements and
+##' larger market towns
+##' 
+##' \item Rural-80: districts with at least 80 per cent of their
+##' population in rural settlements and larger market towns
+##' 
+##' }
+##'
+##'
+##' Unfortunately these classifications are only defined for
+##' England. For all other countries, assumptions have been made about
+##' which LAUs are urban (LU) or rural (SR) using the following data
+##' sources:
+##' 
+##' \itemize{
+##' 
+##' \item Wales,
+##' \url{http://www.ons.gov.uk/ons/guide-method/geography/beginner-s-guide/administrative/wales/unitary-authorities/index.html}
+##' 
+##' \item Scotland,
+##' \url{http://www.scotland.gov.uk/Publications/2004/06/19498/38788}
+##'
+##' \item Northern Ireland,
+##' \url{http://www.nisra.gov.uk/geography/default.asp10.htm}
+##'
+##' }
+##'
+##' @param lad a character vector a LAD ids (post-2011 format)
+##' @param urban a character vector specifying which of the above
+##' classifications to consider as a urban
+##' @return a boolean vector of \code{length(lad)} indicating whether
+##' the corresponding local authority is urban
+##' @export
+is_urban <- function(lad, urban=c("MU", "LU", "OU")) {
+    data(LAD_metadata, envir=environment())
+    tmp <- LAD_metadata[which(LAD_metadata$new %in% lad),]
+    return(tmp$urban_class %in% urban)
+}
