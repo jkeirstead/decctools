@@ -17,7 +17,8 @@
 ##' Default = 'total'
 ##' @param fuel a vector of fuel types to fetch.  Valid values are
 ##' 'coal', 'manufactured', 'petrol', 'gas', 'electricity',
-##' 'bioenergy', 'total', 'all'. Default = 'total'
+##' 'bioenergy', 'total', 'all'. Default = 'total'.  'All' includes
+##' the total as well.  
 ##' @param dir an optional directory in which to cache the data
 ##' @return a long data frame with the requested data.  The 'energy'
 ##' column is measured in GWh.
@@ -47,17 +48,6 @@ get_LAD_data <- function(id, year=max(get_LAD_years()), sector='total', fuel='to
     url <- "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/274024/sub_national_total_final_energy_consumption_statistics_2005_2011.xlsx"
     file_name <- get_remote_file(url, dir)
 
-    ## Load in the raw data from the spreadsheet
-    wb <- tryCatch({
-      loadWorkbook(file_name)
-  }, error=function(e) {
-      message(sprintf("Error loading workbook:\n\n%s\nTried download file from %s.  Email package maintainer to see if URL has changed.  Returning an empty data frame.", e, url))
-      return(NULL)
-  })
-
-    ## If a valid workbook isn't found, return an empty data frame
-    if (is.null(wb)) return(data.frame())
-
     ## A fix for bioenergy
     if (fuel=="bioenergy" & sector!="total") {
         sector <- "total"
@@ -73,54 +63,76 @@ get_LAD_data <- function(id, year=max(get_LAD_years()), sector='total', fuel='to
     }
   
     ## Read in the data
-    df <- lapply(year, function(y, id) {
-
-        unit <- "GWh"
-        sheet_name <- paste(y, unit)
-
-        df <- readWorksheet(wb, sheet_name, 4, 1, 421, 31)
-    
-        ## Since tmp contains all of the data, we now need to work some
-        ## magic to get the right values
-        df <- clean_decc_data(df)
-        df <- cbind(df, year=y)
-        
-        ## Subset on target ids
-        if (!missing(id)) {
-            if (!is.na(id)) {
-                df <- df[which(df$LAU1_code %in% id),]
-            }
-        }
-        
-        ## Subset to select only those sectors and fuels of interest If
-        ## all is given as either sector or fuel then all options are
-        ## returned
-        if (!is.element("all", sector) & !is.element("all", fuel)) {
-            df <- df[which(df$sector %in% sector & df$fuel %in% fuel), ]
-        } else if (is.element("all", sector) & !is.element("all", fuel)) {
-            df <- df[which(df$fuel %in% fuel),] 
-        } else if (!is.element("all", sector) & is.element("all", fuel)) {
-            df <- df[which(df$sector %in% sector),]
-        }
-        
-        ## Renumber rows and return the result
-        row.names(df) <- 1:nrow(df)
-        return(df)
+    wb <- tryCatch({
+        loadWorkbook(file_name)
+    }, error=function(e) {
+        message(e)
+        return(NULL)
     })
 
+    ## If a valid workbook isn't found, return NULL
+    if (is.null(wb)) return(NULL)
+    params <- list(id=ifelse(missing(id), NA, id), sector=sector, fuel=fuel)
+    df <- lapply(year, function(y) process_tab(wb, y, params))
     rm(wb)
 
     ## Combine back into a data frame
     df <- do.call("rbind", df)
     return(df)
+
 }
 
+##' Loads data from a specified tab
+##'
+##' Loads energy data from a specified tab in the LAD workbook.
+##'
+##' @param wb the open workbook containing all of the tabs
+##' @param y the year of data to fetch
+##' @param params a list of parameters giving the target id, sector,
+##' and fuel
+##'
+##' @return a data frame with the data
+##' @import XLConnect
+process_tab <- function(wb, y, params) {
+    
+    unit <- "GWh"
+    sheet_name <- paste(y, unit)
+    
+    df <- readWorksheet(wb, sheet_name, 4, 1, 421, 31)
+    
+    ## Since tmp contains all of the data, we now need to work some
+    ## magic to get the right values
+    df <- clean_decc_data(df)
+    df <- cbind(df, year=y)
+
+    ## Subset on target ids
+    if (!is.na(params$id)) {
+        df <- df[which(df$LAU1_code %in% params$id),]
+    }    
+
+    attach(params, warn.conflicts=FALSE)
+    ## Subset to select only those sectors and fuels of interest If
+    ## all is given as either sector or fuel then all options are
+    ## returned           
+    if (!is.element("all", sector) & !is.element("all", fuel)) {
+        df <- df[which(df$sector %in% sector & df$fuel %in% fuel), ]
+    } else if (is.element("all", sector) & !is.element("all", fuel)) {
+        df <- df[which(df$fuel %in% fuel),] 
+    } else if (!is.element("all", sector) & is.element("all", fuel)) {
+        df <- df[which(df$sector %in% sector),]
+    }
+    detach(params)
+    
+    ## Renumber rows and return the result
+    row.names(df) <- 1:nrow(df)
+    return(df)
+}
 
 ##' Get the years for which LAD data is available
 ##' 
 ##'
 ##' @return a vector of years
-##' @import stringr
+##' @import stringr XLConnect
 get_LAD_years <- function() {
 
     url <- "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/274024/sub_national_total_final_energy_consumption_statistics_2005_2011.xlsx"
@@ -130,10 +142,7 @@ get_LAD_years <- function() {
     wb <- tryCatch({
       loadWorkbook(file_name)
   }, error=function(e) {
-
-      if (grep("OutOfMemory", e)!=1) {
-          message(sprintf("Error loading workbook:\n\n%s\nTried download file from %s.  Email package maintainer to see if URL has changed.  Returning an empty data frame.", e, url))
-      }
+      message(e)
       return(NULL)
   })
     
