@@ -3,6 +3,9 @@ decctools 0.2.0
 
 * Added support for accessing all years of LAD, LSOA, and MSOA data
 
+* Added support for accessing all fuel types in LAD data, not just
+  electricity and gas
+
 * Updated metadata to use new 2011 ONS codes for local authorities,
   census populations, and area classifications
 
