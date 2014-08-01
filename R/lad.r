@@ -203,20 +203,5 @@ clean_decc_data <- function(df) {
     return(df.m)
 }
 
-##' Gets the 2010 population estimates for all local authority
-##' districts
-##'
-##' This is a convenience function that returns the population data
-##' from \code{\link{LAD_metadata}}.
-##'
-##' @seealso \code{\link{LAD_metadata}} 
-##' @export
-##' @return a data frame with the LAU1_code and population
-get_LAD_population <- function() {
 
-    ## This is now stored in the embedded file so it's a quick job.
-    data(LAD_metadata, envir=environment())
-    return(LAD_metadata[,c("LAU1_code", "population")])
-
-}
   
