@@ -27,22 +27,20 @@ NULL
 ##' 
 ##' \item country: the country in which the LAD is located
 ##' 
-##' \item LAU1_code: the Eurostat LAU code associated with each LAD
-##' 
-##' \item short_code: the UK geography local administrative district
-##' short code (LAD11CDO)
-##' 
-##' \item long_code: the UK geography local administrative district
+##' \item new: the UK geography local administrative district
 ##' long code (LAD11CD)
+##' 
+##' ##' \item old: the UK geography local administrative district
+##' short code (LAD11CDO)
 ##' 
 ##' \item urban_class: the urban/rural classification
 ##'
 ##' \item group_name: a descriptive label describing the character of
-##' each LAD
+##' each LAD (the Supergroup of ONS's area classifications)
 ##' 
-##' \item population: mid-year 2010 population estimates for each LAD
+##' \item population: mid-year 2011 population estimates for each LAD
 ##' 
-##' \item area: the area of the LAU in square kilometres
+##' \item area: the area of the LAD in hectares
 ##' 
 ##' \item hdd: the heating degree days of the local climate
 ##' 
@@ -138,7 +136,7 @@ NULL
 ##' (Eurostat LAU) and
 ##' \url{http://www.ons.gov.uk/ons/guide-method/geography/products/names--codes-and-look-ups/names-and-codes-listings/names-and-codes-for-administrative-geography/index.html}
 ##' for UK LADs.  Population data from
-##' \url{http://www.ons.gov.uk/ons/publications/re-reference-tables.html?edition=tcm\%3A77-231847}.
+##' \url{http://www.ons.gov.uk/ons/rel/census/2011-census/population-and-household-estimates-for-the-united-kingdom/}.
 ##'
 ##' @note Please be aware that the LAD codes change from time to time
 ##' and so if you join this data with new data sets, you should

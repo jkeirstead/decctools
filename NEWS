@@ -3,6 +3,9 @@ decctools 0.2.0
 
 * Added support for accessing all years of LAD, LSOA, and MSOA data
 
+* Updated metadata to use new 2011 ONS codes for local authorities,
+  census populations, and area classifications
+
 decctools 0.1.6
 ---------------
 

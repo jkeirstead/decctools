@@ -1,3 +1,5 @@
 TODO.org
 .Rhistory
 BMRS_Licence_JKeirstead.pdf
+R/build-LAD-metadata.r
+data/climate.csv
