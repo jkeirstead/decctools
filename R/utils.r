@@ -83,12 +83,25 @@ get_package_name <- function() {
 ##' corresponding IDs for LAD, MSOA, and LSOA geographies.
 ##'
 ##' @note As SOA energy data are not available for Northern Ireland,
-##' this method only returns a lookup for England, Wales, and Scotland.
-##'
+##' this method only returns a lookup for England, Wales, and
+##' Scotland.  Also these lookup tables are based on the 2011
+##' geographies.  When fetching data for other years, users may find
+##' that codes don't align.  The recommended strategy is to merge on
+##' the name where possible.
+##' 
 ##' @return a data frame
 ##' @export
 get_geo_lookup <- function() {
 
+    ## Start with the full list of local authorities in the UK 2011
+    ## codes.
+    url <- "https://geoportal.statistics.gov.uk/Docs/Names%20and%20Codes/Local_authority_districts_(UK)_2011_Names_and_Codes.zip"
+    file_name <- get_remote_file(url, NA)
+    unzip(file_name, exdir=tempdir())
+    lad <- read.csv(file.path(tempdir(), "LAD_2011_UK_NC.csv"),
+                   stringsAsFactors=FALSE)[,-2]
+    names(lad) <- c("LAD", "name")
+    
     ## For England and Wales, this is quite straight forward as ONS
     ## provides a single lookup table.
     url <- "https://geoportal.statistics.gov.uk/Docs/Lookups/Output_areas_(2011)_to_lower_layer_super_output_areas_(2011)_to_middle_layer_super_output_areas_(2011)_to_local_authority_districts_(2011)_E+W_lookup.zip"
@@ -116,8 +129,13 @@ get_geo_lookup <- function() {
 
     ## Fortunately Northern Ireland doesn't even provide lower level
     ## energy data so we don't need to worry about this.
-
     tmp <- rbind(df, scot.df)
+
+    ## Merge the full list together, starting from LADs
+    tmp <- merge(lad, tmp, all=TRUE)
+
+    ## Reorder and tidy
+    tmp <- tmp[,c("name", "LAD", "MSOA", "LSOA")]
     return(tmp)
 }
 
