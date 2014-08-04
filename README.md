@@ -48,11 +48,13 @@ to the correct level (LAD, MSOA, or LSOA).
    of the table to a local directory.
 	
 The package provides a lookup table to match LAD, MSOA, and LSOA id
-codes; this is accessible via `get_geo_lookup`.  You can also check if
-a given LAD is urban or rural by using `is_urban(LAD, urban)` where
-`urban` is a set of codes defining which ONS urban classifications you
-would like to consider as urban.
+codes; this is accessible via `get_geo_lookup`.  Owing to the frequent
+changes in UK geography in recent years, it is advisable to merge LAD
+data on the `name` field.  
 
+You can also check if a given LAD is urban or rural by using
+`is_urban(LAD, urban)` where `urban` is a set of codes defining which
+ONS urban classifications you would like to consider as urban.
 
 ## Grid carbon intensity
 
