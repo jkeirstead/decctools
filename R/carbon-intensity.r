@@ -116,7 +116,7 @@ get_grid_carbon <- function(start, end) {
   ## Merge with carbon intensities data for each fuel type
   data(carbon_intensities, envir=environment())
   data.m <- melt(data, id="datetime")
-  data.m <- merge(data.m, carbon_intensities, by.x="variable", by.y="fuel")
+  data.m <- merge(data.m, get("carbon_intensities"), by.x="variable", by.y="fuel")
 
   ## Calculate the total emissions in kg CO2
   ## cif = g CO2/kWh so value must be converted from MW in a half-hour period to kWh

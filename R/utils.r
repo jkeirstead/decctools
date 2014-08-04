@@ -122,7 +122,7 @@ get_geo_lookup <- function() {
     file_name <- get_remote_file(url, NA)
     scot.df <- read.csv(file_name)
     data(scotland_igz, envir=environment())
-    scot.df <- merge(scot.df, scotland_igz, by.x="LA_CODE", by.y="scotex")
+    scot.df <- merge(scot.df, get("scotland_igz"), by.x="LA_CODE", by.y="scotex")
     scot.df <- scot.df[,c("IZ_CODE", "lad")]
     names(scot.df) <- c("MSOA", "LAD")
     scot.df <- cbind(LSOA=NA, scot.df)
@@ -201,6 +201,7 @@ get_geo_lookup <- function() {
 ##' the corresponding local authority is urban
 ##' @export
 is_urban <- function(lad, urban=c("MU", "LU", "OU")) {
+    LAD_metadata <- NULL # R CRAN check hack
     data(LAD_metadata, envir=environment())
     tmp <- LAD_metadata[which(LAD_metadata$new %in% lad),]
     return(tmp$urban_class %in% urban)
