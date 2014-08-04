@@ -3,25 +3,26 @@
 ##' This function fetches LSOA (Lower Super Output Area) data from the
 ##' DECC website.
 ##'
-##' @param id a vector of LSOA ids to fetch.  If not specified, then
-##' all LSOAs are retrieved.
 ##' @param year the years of data to fetch.  The default is the most
 ##' recent year.
+##' @param sector a vector of economic sectors to fetch.  For LSOA
+##' data, only 'domestic' is allowed.
 ##' @param fuel the fuel type to fetch.  Valid values are
 ##' 'electricity', 'gas'
+##' @param id a vector of LSOA ids to fetch.  If not specified, then
+##' all LSOAs are retrieved.
 ##' @param dir an optional directory in which to store a copy of the
 ##' data
 ##' @return a long data frame with the requested data.  The 'energy'
 ##' column is measured in GWh.
 ##' @keywords data energy
 ##' @export
-##' @import plyr
 ##' @examples
 ##' \dontrun{
 ##' lsoa_data <- get_LSOA_data() # Gets all data
 ##' }
-get_LSOA_data <- function(id, year=max(get_LSOA_years()), fuel=c("electricity", "gas"), dir) {
-    return(get_SOA_data("LSOA", id, year, "domestic", fuel, dir))
+get_LSOA_data <- function(year=max(get_LSOA_years()), fuel=c("electricity", "gas"), sector="domestic", id, dir) {
+    return(get_SOA_data("LSOA", year, "domestic", fuel, id, dir))
 }
 
 ##' Gets the years for which LSOA data are available

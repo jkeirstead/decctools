@@ -6,21 +6,21 @@
 ##' caching.
 ##'
 ##' @param level either "LSOA" or "MSOA"
-##' @param id the unique id of the SOA to fetch.  If not specified,
-##' then all SOAs are retrieved.
 ##' @param year the year for which you want data.  Defaults to the
 ##' most recent year available.
 ##' @param sector the economic sector to fetch.  Valid values are
 ##' 'domestic', 'nondomestic'
 ##' @param fuel the fuel type to fetch.  Valid values are
 ##' 'electricity', 'gas'
+##' @param id the unique id of the SOA to fetch.  If not specified,
+##' then all SOAs are retrieved.
 ##' @param dir an optional directory in which to save a copy of the
 ##' data
 ##' @return a long data frame with the requested data.  The 'energy'
 ##' column is measured in GWh.
 ##' @keywords data energy
 ##' 
-get_SOA_data <- function(level, id, year=max(get_SOA_years()), sector=c("domestic", "nondomestic"), fuel=c("electricity", "gas"), dir) {
+get_SOA_data <- function(level, year=max(get_SOA_years()), sector=c("domestic", "nondomestic"), fuel=c("electricity", "gas"), id, dir) {
 
     ## Check for valid years
     valid <- get_SOA_years(level)

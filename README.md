@@ -16,31 +16,44 @@ package.
 
 ## Sub-national statistics
 
-To access sub-national statistics, you will need to use one of three
-methods:
+Sub-national energy statistics are available at three different
+geographies: Local Authority Districts (LADs), Middle Super Output
+Areas (MSOAs), and Lower Super Output Areas (LSOAs).  For each
+geography, the following functions are available where `*` corresponds
+to the correct level (LAD, MSOA, or LSOA).
 
-  * `get_LAD_data` gets the demands from Local Authority Districts.
+ * `get_*_data(year, sector, fuel, id, dir)` gets the energy demand
+   data for the geography.  See `?get_*_data` for full detail on the
+   options and note that not all geographies provide the same level of
+   data.  For example at the LSOA level, data are only available for
+   domestic electricity and gas in England and Wales.
+
+   Here's an example:
+
+       ## Gets energy data for electricity and gas use in the domestic sector in the most recent year
+       df <- get_LAD_data(sector="domestic", fuel=c("electricity", "gas"))
+	   
+   You may encounter `OutOfMemoryError (Java)` when loading LSOA data.
+   In this case, close R, open a new session, and type
+   `options(java.parameters = "-Xmx1000m")` _before_ loading
+   decctools.  This increases the maximum amount of memory allowed for
+   Java so you may need to change the 1000 value to match the
+   available memory on your machine.
+   
+ * `get_*_years` gets a numeric vector of years for which data are
+   available at the specified geography.
+   
+ * `get_*_metadata(dir)` gets a table of metadata about the geography
+   in question.  If given, the `dir` option allows you to save a copy
+   of the table to a local directory.
+
 	
-  * `get_MSOA_data` gets the demands from Middle Super Output Areas
-	
-  * `get_LSOA_data` gets the demands from Lower Super Output Areas
-	
-For all of these methods, see `?methodname` for options to select
-demands for only certain zones, sectors, or fuel types.  Note that not
-all geographies provide the same level of data; for example at the
-LSOA level, data are only available for domestic electricity and gas
-in England and Wales.
-
-Here's an example:
-
-    ## Gets energy data for electricity and gas use in the domestic sector in the most recent year
-    df <- get_LAD_data(sector="domestic", fuel=c("electricity", "gas"))
-
 The package provides a lookup table to match LAD, MSOA, and LSOA id
 codes; this is accessible via `get_geo_lookup`.  You can also check if
 a given LAD is urban or rural by using `is_urban(LAD, urban)` where
 `urban` is a set of codes defining which ONS urban classifications you
 would like to consider as urban.
+
 
 ## Grid carbon intensity
 
