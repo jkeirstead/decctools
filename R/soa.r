@@ -19,9 +19,11 @@
 ##' @return a long data frame with the requested data.  The 'energy'
 ##' column is measured in GWh.
 ##' @keywords data energy
-##' 
+##' @importFrom plyr llply
 get_SOA_data <- function(level, year=max(get_SOA_years()), sector=c("domestic", "nondomestic"), fuel=c("electricity", "gas"), id, dir) {
 
+    level <- validate_SOA_level(level)
+    
     ## Check for valid years
     valid <- get_SOA_years(level)
     if (length(setdiff(year, valid))>0) {
@@ -32,7 +34,13 @@ get_SOA_data <- function(level, year=max(get_SOA_years()), sector=c("domestic", 
 
     ## At the moment, DECC only provides these statistics for the
     ## domestic sector
-    if (level=="LSOA") sector <- "domestic"
+    if (level=="LSOA") valid_sectors <- "domestic"
+    if (level=="MSOA") valid_sectors <- c("domestic", "nondomestic")
+    sector <- sector[which(sector %in% valid_sectors)]
+
+    ## Validate the fuels
+    valid_fuels <- c("electricity", "gas")
+    fuel <- fuel[which(fuel %in% valid_fuels)]
     
     ## Because the format of each spreadsheet is slightly different we
     ## have to do some ugly hacking in the parse_raw_SOA_data function
@@ -72,7 +80,7 @@ get_SOA_data <- function(level, year=max(get_SOA_years()), sector=c("domestic", 
 ##' @param level one of "LSOA" (default) or "MSOA" specifying the
 ##' output area level
 ##' @return a numeric vector of valid years for \code{level}
-##' @import XML RCurl
+##' @import XML
 get_SOA_years <- function(level="LSOA") {
 
     ## Validate the input
@@ -250,6 +258,7 @@ parse_raw_SOA_data <- function(level, params) {
 ##' level
 ##' @return a list containing the parameters necessary to read each
 ##' LSOA data file
+##' @importFrom plyr dlply
 get_params_list <- function(level) {
 
     ## Validate the inputs
