@@ -1,3 +1,12 @@
+.DS_Store
 TODO.org
 .Rhistory
 BMRS_Licence_JKeirstead.pdf
+data/climate.csv
+R/build-LAD-metadata.r
+man/get_area_classifications.Rd
+man/get_climate_data.Rd
+man/get_code_lookup.Rd
+man/get_population.Rd
+man/get_urban_rural_classes.Rd
+man/build_LAD_metadata.Rd

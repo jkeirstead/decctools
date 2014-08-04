@@ -1,7 +1,18 @@
-decctools 0.2.0
+decctools 0.2.0 (4 August 2014)
 ---------------
 
-* Added support for all sectors and fuels in local administrative data
+* Added support for accessing all years of LAD, LSOA, and MSOA data
+
+* Added support for accessing all fuel types in LAD data, not just
+  electricity and gas
+
+* Updated metadata to use new 2011 ONS codes for local authorities,
+  census populations, and area classifications
+
+* Added a simple `is_urban` function to classify local authorities
+  based on their ONS code and a user-specified definition of urban
+
+* Simplified API with a consistent interface across all geographies
 
 decctools 0.1.6
 ---------------
@@ -23,8 +34,9 @@ decctools 0.1.4
 decctools 0.1.3
 ---------------
 
-* Disabled curl's validation of SSL certificate to pass CRAN (Windows) checks.
-  Not ideal but I can't reproduce the problem on my Windows machine. 
+* Disabled curl's validation of SSL certificate to pass CRAN (Windows)
+  checks.  Not ideal but I can't reproduce the problem on my Windows
+  machine.
 
 * Converted Depends statements to Imports
 
@@ -43,6 +55,10 @@ decctools 0.1.0
 
 * initial release
 
-* provides methods for accessing UK Dept of Energy and Climate Change statistics on energy consumption at local authority district, MSOA, and LSOA level.
+* provides methods for accessing UK Dept of Energy and Climate Change
+  statistics on energy consumption at local authority district, MSOA,
+  and LSOA level.
 
-* provides methods for accessing grid fuel mix and carbon intensity of electricity using Elexon's BM Reports data, as archived by the charity Renewable Energy Foundation
+* provides methods for accessing grid fuel mix and carbon intensity of
+  electricity using Elexon's BM Reports data, as archived by the
+  charity Renewable Energy Foundation
