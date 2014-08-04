@@ -87,7 +87,7 @@ get_package_name <- function() {
 ##'
 ##' @return a data frame
 ##' @export
-get_lookup_table <- function() {
+get_geo_lookup <- function() {
 
     ## For England and Wales, this is quite straight forward as ONS
     ## provides a single lookup table.
@@ -106,7 +106,7 @@ get_lookup_table <- function() {
     ## lookup table from
     ## \url{https://www.scotxed.net/Survey%20documentation/List%20of%20local%20authority%20codes.xls}
     url <- "http://www.scotland.gov.uk/Resource/Doc/933/0109431.txt"
-    file_name <- get_remote_file(url, dir)
+    file_name <- get_remote_file(url, NA)
     scot.df <- read.csv(file_name)
     data(scotland_igz, envir=environment())
     scot.df <- merge(scot.df, scotland_igz, by.x="LA_CODE", by.y="scotex")
