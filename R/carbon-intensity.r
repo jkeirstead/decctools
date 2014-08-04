@@ -114,6 +114,7 @@ get_grid_carbon <- function(start, end) {
   data <- get_grid_mix(start, end)
 
   ## Merge with carbon intensities data for each fuel type
+  carbon_intensities <- NULL # R CRAN check hack
   data(carbon_intensities, envir=environment())
   data.m <- melt(data, id="datetime")
   data.m <- merge(data.m, get("carbon_intensities"), by.x="variable", by.y="fuel")
