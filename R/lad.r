@@ -8,8 +8,6 @@
 ##' fuel values, which represent approximately 0.3% of the total
 ##' demand.
 ##'
-##' @param id the unique id of the LAD to fetch.  If not specified,
-##' then all LADs are retrieved.
 ##' @param year the year to fetch. If not specified, then the most
 ##' recent year is retrieved.  Only single years currently supported
 ##' @param sector a vector of economic sectors to fetch.  Valid values
@@ -19,11 +17,14 @@
 ##' 'coal', 'manufactured', 'petrol', 'gas', 'electricity',
 ##' 'bioenergy', 'total', 'all'. Default = 'total'.  'All' includes
 ##' the total as well.  
-##' @param dir an optional directory in which to cache the data
+##' @param id the unique id of the LAD to fetch.  If not specified,
+##' then all LADs are retrieved.
+##' ##' @param dir an optional directory in which to cache the data
 ##' @return a long data frame with the requested data.  The 'energy'
 ##' column is measured in GWh.
 ##' @keywords data energy
 ##' @export
+##' @import XLConnect
 ##' @examples
 ##' \dontrun{
 ##' # Gets energy data for total fuels and sectors for most recent year
@@ -42,7 +43,7 @@
 ##'
 ##' }
 ##'    
-get_LAD_data <- function(id, year=max(get_LAD_years()), sector='total', fuel='total', dir) {
+get_LAD_data <- function(year=max(get_LAD_years()), sector='total', fuel='total', id, dir) {
 
     ## Download the data if necessary
     url <- "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/274024/sub_national_total_final_energy_consumption_statistics_2005_2011.xlsx"
@@ -133,6 +134,7 @@ process_tab <- function(wb, y, params) {
 ##'
 ##' @return a vector of years
 ##' @import stringr XLConnect
+##' @export
 get_LAD_years <- function() {
 
     url <- "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/274024/sub_national_total_final_energy_consumption_statistics_2005_2011.xlsx"
@@ -203,5 +205,20 @@ clean_decc_data <- function(df) {
     return(df.m)
 }
 
+##' Gets metadata to describe LADs
+##'
+##' Gets metadata to decribe the local authority districts
+##'
+##' @param dir an optional directory in which to save a copy of the metadata
+##' @return a data frame giving metadata for each LAD.  See \link{LAD_metadata}
+##' @export
+get_LAD_metadata <- function(dir) {
+    data(LAD_metadata, envir=environment())
 
-  
+    if (!missing(dir)) {
+        dir <- validate_directory(dir)
+        write.csv(LAD_metadata, file=file.path(dir, "LAD_metadata.csv"), row.names=FALSE)
+    }
+
+    return(LAD_metadata)
+}

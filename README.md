@@ -46,7 +46,6 @@ to the correct level (LAD, MSOA, or LSOA).
  * `get_*_metadata(dir)` gets a table of metadata about the geography
    in question.  If given, the `dir` option allows you to save a copy
    of the table to a local directory.
-
 	
 The package provides a lookup table to match LAD, MSOA, and LSOA id
 codes; this is accessible via `get_geo_lookup`.  You can also check if
