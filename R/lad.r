@@ -112,18 +112,16 @@ process_tab <- function(wb, y, params) {
         df <- df[which(df$LAU1_code %in% params$id),]
     }    
 
-    attach(params, warn.conflicts=FALSE)
     ## Subset to select only those sectors and fuels of interest If
     ## all is given as either sector or fuel then all options are
     ## returned           
-    if (!is.element("all", sector) & !is.element("all", fuel)) {
-        df <- df[which(df$sector %in% sector & df$fuel %in% fuel), ]
-    } else if (is.element("all", sector) & !is.element("all", fuel)) {
-        df <- df[which(df$fuel %in% fuel),] 
-    } else if (!is.element("all", sector) & is.element("all", fuel)) {
-        df <- df[which(df$sector %in% sector),]
+    if (!is.element("all", params$sector) & !is.element("all", params$fuel)) {
+        df <- df[which(df$sector %in% params$sector & df$fuel %in% params$fuel), ]
+    } else if (is.element("all", params$sector) & !is.element("all", params$fuel)) {
+        df <- df[which(df$fuel %in% params$fuel),] 
+    } else if (!is.element("all", params$sector) & is.element("all", params$fuel)) {
+        df <- df[which(df$sector %in% params$sector),]
     }
-    detach(params)
     
     ## Renumber rows and return the result
     row.names(df) <- 1:nrow(df)
@@ -189,6 +187,7 @@ clean_decc_data <- function(df) {
     df.m <- df.m[,-3]
 
     ## Tidy the name fields so they will match get_geo_lookup
+    name <- NULL # R CRAN check hack for below
     df.m <- transform(df.m, name=str_replace(name, "&", "and"))
     df.m <- transform(df.m, name=str_replace(name, " on Trent", "-on-Trent"))
     df.m <- transform(df.m, name=str_replace(name, ", Cynon, Taff", " Cynon Taf"))
@@ -228,8 +227,8 @@ get_LAD_metadata <- function(dir) {
 
     if (!missing(dir)) {
         dir <- validate_directory(dir)
-        write.csv(LAD_metadata, file=file.path(dir, "LAD_metadata.csv"), row.names=FALSE)
+        write.csv(get("LAD_metadata"), file=file.path(dir, "LAD_metadata.csv"), row.names=FALSE)
     }
 
-    return(LAD_metadata)
+    return(get("LAD_metadata"))
 }

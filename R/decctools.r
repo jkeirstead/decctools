@@ -7,12 +7,10 @@
 ##' functions.
 ##'
 ##' @seealso \code{\link{get_LAD_data}}, \code{\link{get_MSOA_data}},
-##' \code{\link{get_LSOA_data}}, \code{\link{get_lookup_table}},
+##' \code{\link{get_LSOA_data}}, \code{\link{get_geo_lookup}},
 ##' \code{\link{get_grid_mix}}, \code{\link{get_grid_carbon}}
 ##' @name decctools
 ##' @docType package
-##' @import XLConnect
-##' @importFrom plyr llply ddply dlply mutate summarize
 NULL
 
 ##' Descriptive data on local administrative districts
@@ -167,5 +165,26 @@ NULL
 ##' @format A data frame with 13 rows and 2 columns
 NULL  
 
-      
+##' Scotland geography data
+##'
+##' Provides a lookup between Scottish districts and their Scottish
+##' Executive codes.  Used internally to build the
+##' \link{get_geo_lookup} table.
+##' 
+##' @docType data
+##' @keywords datasets
+##' @format a data frame with 3 columns
+##' @name scotland_igz
+NULL
 
+##' SOA parameters
+##'
+##' Provides a table of parameters for downloading SOA energy
+##' consumption data.  Used by \link{get_SOA_data}.
+##'
+##' @docType data
+##' @keywords datasets
+##' @format a data frame with 8 columns giving the parameters needed
+##' to read the Excel spreadsheets containing the energy data
+##' @name params
+NULL

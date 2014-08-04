@@ -1,4 +1,4 @@
-decctools 0.2.0
+decctools 0.2.0 (4 August 2014)
 ---------------
 
 * Added support for accessing all years of LAD, LSOA, and MSOA data
@@ -11,6 +11,8 @@ decctools 0.2.0
 
 * Added a simple `is_urban` function to classify local authorities
   based on their ONS code and a user-specified definition of urban
+
+* Simplified API with a consistent interface across all geographies
 
 decctools 0.1.6
 ---------------
