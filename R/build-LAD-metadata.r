@@ -24,6 +24,10 @@ build_LAD_metadata <- function() {
     names(tmp)[6] <- "group_name"
     tmp <- arrange(tmp, new)
 
+    ## Need to tidy names to match lookups?
+    ## df.m <- transform(df.m, name=str_replace(name, "&", "and"))
+    ## df.m <- transform(df.m, name=str_replace(name, "Edinburgh, City of", "City of Edinburgh"))
+
     return(tmp)      
 }
 

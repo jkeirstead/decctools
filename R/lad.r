@@ -79,6 +79,7 @@ get_LAD_data <- function(year=max(get_LAD_years()), sector='total', fuel='total'
 
     ## Combine back into a data frame
     df <- do.call("rbind", df)
+
     return(df)
 
 }
@@ -166,7 +167,7 @@ get_LAD_years <- function() {
 ##'
 ##' @param df the raw DECC data frame from the spreadsheet
 ##' @return a long database with headers by sector and fuel
-##' @import reshape2
+##' @import reshape2 stringr
 clean_decc_data <- function(df) {
 
     ## Manually define the column names
@@ -186,6 +187,16 @@ clean_decc_data <- function(df) {
     df.m <- melt(df, id=c("LAU1_code", "name"), value.name="energy")
     df.m <- cbind(df.m, colsplit(df.m$variable, "\\.", c("sector", "fuel")))
     df.m <- df.m[,-3]
+
+    ## Tidy the name fields so they will match get_geo_lookup
+    df.m <- transform(df.m, name=str_replace(name, "&", "and"))
+    df.m <- transform(df.m, name=str_replace(name, " on Trent", "-on-Trent"))
+    df.m <- transform(df.m, name=str_replace(name, ", Cynon, Taff", " Cynon Taf"))
+    df.m <- transform(df.m, name=str_replace(name, "Vale of Glamorgan, The", "The Vale of Glamorgan"))
+    df.m <- transform(df.m, name=str_replace(name, "Edinburgh, City of", "City of Edinburgh"))
+    df.m <- transform(df.m, name=str_replace(name, " \\(Western Isles\\)", ""))
+    df.m <- transform(df.m, name=str_replace(name, "Dungannon.*", "Dungannon"))
+    df.m <- transform(df.m, name=str_replace(name, " upon Avon", "-on-Avon"))
     
     ## Replace .. matches with NA
     df.m$energy <- gsub("\\.\\.", NA, df.m$energy)
