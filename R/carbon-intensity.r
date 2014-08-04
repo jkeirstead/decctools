@@ -106,8 +106,8 @@ get_grid_mix <- function(start, end) {
 #' carbon <- get_grid_carbon(start, end) 
 #' 
 #' @export
-#' @import reshape2 plyr
-#' @importFrom plyr mutate ddply
+#' @import reshape2 
+#' @importFrom plyr mutate ddply summarize
 get_grid_carbon <- function(start, end) {
 
   ## Get the grid mix data for this period
