@@ -35,10 +35,10 @@
 #' # These require a working internet connection
 #' start <- "2010-01-01"
 #' end <- "2010-01-03"
-#' library(RCurl)
-#' if (url.exists("http://www.google.com")) {
-#'   data <- get_grid_mix(start, end) # Gets data for 1--3 January 2010
-#' }
+#'
+#' # Gets data for 1--3 January 2010
+#' data <- get_grid_mix(start, end) 
+#' 
 #' @export
 #' @import stringr XML
 get_grid_mix <- function(start, end) {
@@ -102,10 +102,9 @@ get_grid_mix <- function(start, end) {
 #' # These require a working internet connection
 #' start <- "2010-01-01"
 #' end <- "2010-01-03"
-#' library(RCurl)
-#' if (url.exists("http://www.google.com")) {
-#'   carbon <- get_grid_carbon(start, end) # Gets grid carbon for 1--3 January 2010
-#' }
+#' # Gets grid carbon for 1--3 January 2010
+#' carbon <- get_grid_carbon(start, end) 
+#' 
 #' @export
 #' @import reshape2 plyr
 #' @importFrom plyr mutate ddply
