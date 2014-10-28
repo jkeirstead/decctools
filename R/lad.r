@@ -46,7 +46,7 @@
 get_LAD_data <- function(year=max(get_LAD_years()), sector='total', fuel='total', id, dir) {
 
     ## Download the data if necessary
-    url <- "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/274024/sub_national_total_final_energy_consumption_statistics_2005_2011.xlsx"
+    url <- "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/360876/Sep_2014_sub_national_total_final_energy_consumption_statistics.xlsx"
     file_name <- get_remote_file(url, dir)
 
     ## A fix for bioenergy
@@ -68,6 +68,7 @@ get_LAD_data <- function(year=max(get_LAD_years()), sector='total', fuel='total'
         loadWorkbook(file_name)
     }, error=function(e) {
         message(e)
+        print(file_name)
         return(NULL)
     })
 
@@ -136,7 +137,7 @@ process_tab <- function(wb, y, params) {
 ##' @export
 get_LAD_years <- function() {
 
-    url <- "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/274024/sub_national_total_final_energy_consumption_statistics_2005_2011.xlsx"
+    url <- "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/360876/Sep_2014_sub_national_total_final_energy_consumption_statistics.xlsx"
     file_name <- get_remote_file(url)
 
     ## Load in the raw data from the spreadsheet
