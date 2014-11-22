@@ -84,8 +84,8 @@ get_package_name <- function() {
 ##'
 ##' @note As SOA energy data are not available for Northern Ireland,
 ##' this method only returns a lookup for England, Wales, and
-##' Scotland.  Also these lookup tables are based on the 2011
-##' geographies.  When fetching data for other years, users may find
+##' Scotland.  These lookup tables are based on a mix of 2011 and 2012
+##' geographies so when fetching data for other years, users may find
 ##' that codes don't align.  The recommended strategy is to merge on
 ##' the name where possible.
 ##' 
@@ -93,12 +93,12 @@ get_package_name <- function() {
 ##' @export
 get_geo_lookup <- function() {
 
-    ## Start with the full list of local authorities in the UK 2011
+    ## Start with the full list of local authorities in the UK 2012
     ## codes.
-    url <- "https://geoportal.statistics.gov.uk/Docs/Names%20and%20Codes/Local_authority_districts_(UK)_2011_Names_and_Codes.zip"
+    url <- "https://geoportal.statistics.gov.uk/Docs/Names%20and%20Codes/Local_authority_districts_(UK)_2012_Names_and_Codes.zip"
     file_name <- get_remote_file(url, NA)
     unzip(file_name, exdir=tempdir())
-    lad <- read.csv(file.path(tempdir(), "LAD_2011_UK_NC.csv"),
+    lad <- read.csv(file.path(tempdir(), "LAD_2012_UK_NC.csv"),
                    stringsAsFactors=FALSE)[,-2]
     names(lad) <- c("LAD", "name")
     
