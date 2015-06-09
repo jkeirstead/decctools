@@ -48,7 +48,7 @@ the end date.
 start <- "2010-01-01"
 end <- "2010-01-03"
 
-# Gets data for 1--3 January 2010
+# Gets data for 1-3 January 2010
 data <- get_grid_mix(start, end)
 }
 

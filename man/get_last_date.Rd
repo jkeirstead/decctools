@@ -6,7 +6,9 @@
 get_last_date()
 }
 \value{
-a Date object
+a Date object.  If the REF website is unavailable, it will
+return today's date on the assumption that once it's back up, it
+will be up-to-date.
 }
 \description{
 Gets the date of the last update to the REF fuels mix database.
