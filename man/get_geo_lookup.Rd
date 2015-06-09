@@ -15,8 +15,8 @@ corresponding IDs for LAD, MSOA, and LSOA geographies.
 \note{
 As SOA energy data are not available for Northern Ireland,
 this method only returns a lookup for England, Wales, and
-Scotland.  Also these lookup tables are based on the 2011
-geographies.  When fetching data for other years, users may find
+Scotland.  These lookup tables are based on a mix of 2011 and 2012
+geographies so when fetching data for other years, users may find
 that codes don't align.  The recommended strategy is to merge on
 the name where possible.
 }

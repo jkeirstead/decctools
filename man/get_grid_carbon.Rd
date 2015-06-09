@@ -22,7 +22,7 @@ between specified dates.
 # These require a working internet connection
 start <- "2010-01-01"
 end <- "2010-01-03"
-# Gets grid carbon for 1--3 January 2010
+# Gets grid carbon for 1-3 January 2010
 carbon <- get_grid_carbon(start, end)
 }
 \seealso{
