@@ -2,8 +2,8 @@ Package: decctools
 Type: Package
 Author: James Keirstead <j.keirstead@imperial.ac.uk>
 Maintainer: James Keirstead <j.keirstead@imperial.ac.uk>
-Version: 0.2.1-0
-Date: 2014-xx-xx
+Version: 0.2.1
+Date: 2015-06-09
 License: GPL-2
 Title: Get energy data from the UK Dept of Energy and Climate Change
 Description: decctools provides functions for retrieving energy
