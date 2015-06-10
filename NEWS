@@ -1,4 +1,4 @@
-decctools 0.2.1 (9 June 2015)
+decctools 0.2.1 (10 June 2015)
 ---------------
 
 * `get_grid_mix`, `get_last_date` and `get_grid_carbon` now throw
