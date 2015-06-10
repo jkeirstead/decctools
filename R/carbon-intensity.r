@@ -36,54 +36,62 @@
 #' start <- "2010-01-01"
 #' end <- "2010-01-03"
 #'
-#' # Gets data for 1--3 January 2010
+#' # Gets data for 1-3 January 2010
 #' data <- get_grid_mix(start, end) 
 #' 
 #' @export
-#' @import stringr XML
+#' @import stringr XML RCurl
 get_grid_mix <- function(start, end) {
 
-  ## Coerce strings to proper dates
-  start <- as.Date(start)
-  end <- as.Date(end)
+    ## Check if we have a working internet connection
+    base_url <- "http://www.ref.org.uk/fuel/tablebysp.php?valdate="
     
-  ## Validate inputs
-  first_date <- as.Date("2009-01-01")
-  last_date <- get_last_date()
-  template <- "Invalid %s date.  Must be between %s and %s."
-  if (start < as.Date("2009-01-01") | start > last_date) {
-    stop(sprintf(template, "start", first_date, last_date))
-  }
+    if (!url.exists(base_url)) {
+        warning("The website containing the data you've requested is currently down.  Please try again later.")
+        return(NULL)
+    }
 
-  if (end < as.Date("2009-01-01") | start > last_date) {
-    stop(sprintf(template, "end", first_date, last_date))
-  }
+    ## Coerce strings to proper dates
+    start <- as.Date(start)
+    end <- as.Date(end)
+    
+    ## Validate inputs
+    first_date <- as.Date("2009-01-01")
+    last_date <- get_last_date()
+    template <- "Invalid %s date.  Must be between %s and %s."
+    if (start < as.Date("2009-01-01") | start > last_date) {
+        stop(sprintf(template, "start", first_date, last_date))
+    }
+    
+    if (end < as.Date("2009-01-01") | start > last_date) {
+        stop(sprintf(template, "end", first_date, last_date))
+    }
 
-  if (end < start) stop("End date before start date.  Try again.")
+    if (end < start) stop("End date before start date.  Try again.")
 
-  ## Create a sequence of dates
-  dates <- seq(start, end, by="day")
+    ## Create a sequence of dates
+    dates <- seq(start, end, by="day")
 
-  ## Load the data from the REF website
-  tmp <- list(length(dates))
-  columns <- c("character","numeric", rep("FormattedNumber", 14))
-  base_url <- "http://www.ref.org.uk/fuel/tablebysp.php?valdate="
-  for (i in 1:length(dates)) {
-    url <- paste(base_url, dates[i], sep="")
-    table <- suppressWarnings(readHTMLTable(url, colClasses=columns)[[2]])
-    tmp[[i]] <- table
-  }
-  data <- do.call("rbind", tmp)
+    ## Load the data from the REF website
+    tmp <- list(length(dates))
+    columns <- c("character","numeric", rep("FormattedNumber", 14))
+    
+    for (i in 1:length(dates)) {
+        url <- paste(base_url, dates[i], sep="")
+        table <- suppressWarnings(readHTMLTable(url, colClasses=columns)[[2]])
+        tmp[[i]] <- table
+    }
+    data <- do.call("rbind", tmp)
+    
+    ## Tidy things up
+    names(data) <- str_trim(names(data))
 
-  ## Tidy things up
-  names(data) <- str_trim(names(data))
+    ## Convert date format into something more sensible
+    data <- mutate(data, datetime=as.POSIXct((data$SP-1)*30*60, origin=data$SD))
 
-  ## Convert date format into something more sensible
-  data <- mutate(data, datetime=as.POSIXct((data$SP-1)*30*60, origin=data$SD))
-
-  ## Rearrange
-  data <- data[,c(17, 3:15)]
-  return(data)
+    ## Rearrange
+    data <- data[,c(17, 3:15)]
+    return(data)
 }
 
 
@@ -102,7 +110,7 @@ get_grid_mix <- function(start, end) {
 #' # These require a working internet connection
 #' start <- "2010-01-01"
 #' end <- "2010-01-03"
-#' # Gets grid carbon for 1--3 January 2010
+#' # Gets grid carbon for 1-3 January 2010
 #' carbon <- get_grid_carbon(start, end) 
 #' 
 #' @export
@@ -113,6 +121,9 @@ get_grid_carbon <- function(start, end) {
   ## Get the grid mix data for this period
   data <- get_grid_mix(start, end)
 
+  ## Need the grid mix data to proceed
+  if (is.null(data)) return(NULL)
+  
   ## Merge with carbon intensities data for each fuel type
   carbon_intensities <- NULL # R CRAN check hack
   data(carbon_intensities, envir=environment())
@@ -135,25 +146,32 @@ get_grid_carbon <- function(start, end) {
 #'
 #' Gets the date of the last update to the REF fuels mix database.
 #'
-#' @return a Date object
-#' @import lubridate
+#' @return a Date object.  If the REF website is unavailable, it will
+#' return today's date on the assumption that once it's back up, it
+#' will be up-to-date.
+#' @import lubridate RCurl
 get_last_date <- function() {
   
-  base_url <- "http://www.ref.org.uk/fuel/tablebysp.php"
-  columns <- c("character","numeric", rep("FormattedNumber", 14)) 
-  table <- suppressWarnings(readHTMLTable(base_url, colClasses=columns)[[2]])
-  last_date <- as.Date(as.character(tail(table$SD, 1)))
+    base_url <- "http://www.ref.org.uk/fuel/tablebysp.php"
 
-  ## If the table isn't showing the data for some reason (which does
-  ## happen), revert to the last day of the previous month
-  if (length(last_date)==0) {
-      tmp <- Sys.Date()
-      day(tmp) <- 1
-      day(tmp) <- day(tmp)-1
-      last_date <- tmp
-  }
+    if (!url.exists(base_url)) {
+        return(Sys.Date())
+    }
+    
+    columns <- c("character","numeric", rep("FormattedNumber", 14)) 
+    table <- suppressWarnings(readHTMLTable(base_url, colClasses=columns)[[2]])
+    last_date <- as.Date(as.character(tail(table$SD, 1)))
+
+    ## If the table isn't showing the data for some reason (which does
+    ## happen), revert to the last day of the previous month
+    if (length(last_date)==0) {
+        tmp <- Sys.Date()
+        day(tmp) <- 1
+        day(tmp) <- day(tmp)-1
+        last_date <- tmp
+    }
       
-  return(last_date)
+    return(last_date)
 }
                        
   

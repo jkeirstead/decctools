@@ -1,3 +1,14 @@
+decctools 0.2.1 (10 June 2015)
+---------------
+
+* `get_grid_mix`, `get_last_date` and `get_grid_carbon` now throw
+  warnings when the REF website is down.
+
+* Updated the URL for the LAD data which has changed once again
+
+* Updated the URL for the LAD names and codes file
+
+
 decctools 0.2.0 (4 August 2014)
 ---------------
 

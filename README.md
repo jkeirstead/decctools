@@ -29,10 +29,12 @@ to the correct level (LAD, MSOA, or LSOA).
    domestic electricity and gas in England and Wales.
 
    Here's an example:
+ 
+   ```
+   ## Gets energy data for electricity and gas use in the domestic sector in the most recent year
+   df <- get_LAD_data(sector="domestic", fuel=c("electricity", "gas"))
+   ```
 
-       ## Gets energy data for electricity and gas use in the domestic sector in the most recent year
-       df <- get_LAD_data(sector="domestic", fuel=c("electricity", "gas"))
-	   
    You may encounter `OutOfMemoryError (Java)` when loading LSOA data.
    In this case, close R, open a new session, and type
    `options(java.parameters = "-Xmx1000m")` _before_ loading
